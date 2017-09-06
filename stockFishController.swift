@@ -26,8 +26,8 @@ class stockFishController: NSViewController {
     {
         stockTableViewData.insert([
             "code"      : stockCode.stringValue,
-            "name"      : "no name",
-            "lastprice" : "no price"
+            "name"      : "no name yet",
+            "lastprice" : "no price yet"
             
             ], at: 0)
         
