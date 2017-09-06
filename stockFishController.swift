@@ -9,15 +9,15 @@
 import Cocoa
 
 class stockFishController: NSViewController {
-
+    
     @IBOutlet weak var stockTableView: NSTableView!
     @IBOutlet weak var stockCode: NSTextField!
     
     //..
     /*
      implement
- */
-
+     */
+    var testVariable = 5
     
     var stockTableViewData = [[String:String]]()
     
@@ -26,8 +26,8 @@ class stockFishController: NSViewController {
     {
         stockTableViewData.insert([
             "code"      : stockCode.stringValue,
-            "name"      : "no name yet",
-            "lastprice" : "no price yet"
+            "name"      : "no name",
+            "lastprice" : "no price"
             
             ], at: 0)
         
@@ -50,7 +50,7 @@ extension stockFishController:NSTableViewDataSource, NSTableViewDelegate{
     }
     
     func tableView(_ stockTableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView?{
-
+        
         
         var result:NSTableCellView
         result  = stockTableView.make(withIdentifier: (tableColumn?.identifier)!, owner: self) as! NSTableCellView
