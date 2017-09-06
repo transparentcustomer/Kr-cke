@@ -22,7 +22,7 @@ class stockFishController: NSViewController {
     var stockTableViewData = [[String:String]](){
         didSet{
             print("the model changed")
-            stockTableView.reloadData()//.. every time the model (data) changes - the view get reloaded
+            stockTableView.reloadData() //.. every time the model (data) changes - the view get reloaded
         }
     }
     
@@ -35,12 +35,8 @@ class stockFishController: NSViewController {
         if stockCode.stringValue.isEmpty   {}else{
             
             let insertedYahooSymbol = stockCode.stringValue
-            
             stockTableViewData = (brain.fillStockArray(insertedYahooSymbol))
-    }
-
-        
-        
+        }
     }
     
     //MARK: -
@@ -52,6 +48,8 @@ class stockFishController: NSViewController {
     }
     
 }
+
+//MARK: - TableViewFunctions:
 extension stockFishController:NSTableViewDataSource, NSTableViewDelegate{
     
     func numberOfRows(in stockTableView: NSTableView) -> Int {
