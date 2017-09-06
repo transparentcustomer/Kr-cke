@@ -15,10 +15,10 @@ struct stockBrain{
     var stockPuller = yahooPuller()
     
     private var yahooSymbol:    String?
-    var stockSymbolArray    =   [String]()
+    
     var yahooStockDataArray =   [[String:String]]()
     
-    var stockTableViewData = [[String:String]]()
+//    var stockTableViewData = [[String:String]]()
     
     //FIXME: ..toDelete:
     /*
@@ -53,27 +53,29 @@ struct stockBrain{
     
     
     //MARK: - get Yahoo Info:
-    func getUpdates()
+    mutating func getUpdates() -> ([[String : String]])
     { //.. to get stock names and price values
-        print("yahooStockDataArray: \(yahooStockDataArray)")
+        //FIXME: ..toDelete
+        //print("yahooStockDataArray: \(yahooStockDataArray)")
         
         
         
         for (index,var item) in yahooStockDataArray.enumerated()
         {
-            //FIXME: ..toDelete
-            //print("the index is: \(index) and the content: \(item["code"]!)")
-            
+
             //FIXME:  .. beware of cycling //.. in the case of no stock belonging to a symbol
-            
             let symbol = item["code"]!
-            
+            var stockName:String?
             //MARK: get the name
             if item["name"] == "no info" {
                 
-                let diagnose =  stockPuller.getStockName(yahoosymbol: symbol)
+                stockName =  stockPuller.getStockName(yahoosymbol: symbol)
+                //FIXME: ..toDelete
+                //print("\(String(describing: item["code"]!)) has no name yet")
+                print("stockName: \(stockName)")
                 
-                print("\(String(describing: item["code"]!)) has no name yet")
+                yahooStockDataArray[index].updateValue(stockName!, forKey: "name")
+                
             }
             
             
@@ -85,7 +87,8 @@ struct stockBrain{
             //print("Diagnose: \(diagnose)")
             
         }
-        
+        print("yahooStockDataArray: \(yahooStockDataArray)")
+       return yahooStockDataArray
     }
     
     

@@ -22,13 +22,18 @@ class stockFishController: NSViewController {
     var stockTableViewData = [[String:String]](){
         didSet{
             print("the model changed")
-            stockTableView.reloadData() //.. every time the model (data) changes - the view get reloaded
+            updateUI() //.. every time the model (data) changes - the view get reloaded
         }
     }
     
     //MARK: - Actions
     @IBAction func update(_ sender: NSButton) {
-        brain.getUpdates()
+        stockTableViewData = brain.getUpdates()
+        updateUI()
+        
+        print("update()")
+        print(stockTableViewData)
+        print(brain.yahooStockDataArray)
     }
     @IBAction func addStock(_ sender: NSButton)
     {
@@ -37,6 +42,18 @@ class stockFishController: NSViewController {
             let insertedYahooSymbol = stockCode.stringValue
             stockTableViewData = (brain.fillStockArray(insertedYahooSymbol))
         }
+    }
+    
+    
+    func updateUI(){
+        
+       
+        
+        stockTableView.reloadData()
+        
+        print("updateUI()")
+        print(stockTableViewData)
+        print(brain.yahooStockDataArray)
     }
     
     //MARK: -
