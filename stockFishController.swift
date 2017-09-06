@@ -13,6 +13,10 @@ class stockFishController: NSViewController {
     @IBOutlet weak var stockTableView: NSTableView!
     @IBOutlet weak var stockCode: NSTextField!
     
+    //..
+    /*
+     implement
+ */
 
     
     var stockTableViewData = [[String:String]]()
