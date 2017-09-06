@@ -14,6 +14,7 @@
 		C4FBCB481F5FC7D000148BCC /* stockFishTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB471F5FC7D000148BCC /* stockFishTests.swift */; };
 		C4FBCB531F5FC7D000148BCC /* stockFishUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB521F5FC7D000148BCC /* stockFishUITests.swift */; };
 		C4FBCB611F5FC85E00148BCC /* stockFishController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB601F5FC85E00148BCC /* stockFishController.swift */; };
+		C4FBCB641F5FEAE800148BCC /* stockBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB631F5FEAE800148BCC /* stockBrain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		C4FBCB521F5FC7D000148BCC /* stockFishUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = stockFishUITests.swift; sourceTree = "<group>"; };
 		C4FBCB541F5FC7D000148BCC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C4FBCB601F5FC85E00148BCC /* stockFishController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stockFishController.swift; sourceTree = SOURCE_ROOT; };
+		C4FBCB631F5FEAE800148BCC /* stockBrain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stockBrain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +99,9 @@
 		C4FBCB311F5FC7D000148BCC /* stockFish */ = {
 			isa = PBXGroup;
 			children = (
-				C4FBCB601F5FC85E00148BCC /* stockFishController.swift */,
-				C4FBCB3B1F5FC7D000148BCC /* Main.storyboard */,
+				C4FBCB661F5FEAF600148BCC /* C */,
+				C4FBCB651F5FEAEF00148BCC /* M */,
+				C4FBCB671F5FEAFE00148BCC /* V */,
 				C4FBCB621F5FC88D00148BCC /* + */,
 			);
 			path = stockFish;
@@ -131,6 +134,30 @@
 				C4FBCB3E1F5FC7D000148BCC /* Info.plist */,
 			);
 			name = "+";
+			sourceTree = "<group>";
+		};
+		C4FBCB651F5FEAEF00148BCC /* M */ = {
+			isa = PBXGroup;
+			children = (
+				C4FBCB631F5FEAE800148BCC /* stockBrain.swift */,
+			);
+			name = M;
+			sourceTree = "<group>";
+		};
+		C4FBCB661F5FEAF600148BCC /* C */ = {
+			isa = PBXGroup;
+			children = (
+				C4FBCB601F5FC85E00148BCC /* stockFishController.swift */,
+			);
+			name = C;
+			sourceTree = "<group>";
+		};
+		C4FBCB671F5FEAFE00148BCC /* V */ = {
+			isa = PBXGroup;
+			children = (
+				C4FBCB3B1F5FC7D000148BCC /* Main.storyboard */,
+			);
+			name = V;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -272,6 +299,7 @@
 				C4FBCB611F5FC85E00148BCC /* stockFishController.swift in Sources */,
 				C4FBCB381F5FC7D000148BCC /* stockFish.xcdatamodeld in Sources */,
 				C4FBCB331F5FC7D000148BCC /* AppDelegate.swift in Sources */,
+				C4FBCB641F5FEAE800148BCC /* stockBrain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
