@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		C4FBCB331F5FC7D000148BCC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */; };
-		C4FBCB351F5FC7D000148BCC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB341F5FC7D000148BCC /* ViewController.swift */; };
 		C4FBCB381F5FC7D000148BCC /* stockFish.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB361F5FC7D000148BCC /* stockFish.xcdatamodeld */; };
 		C4FBCB3A1F5FC7D000148BCC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C4FBCB391F5FC7D000148BCC /* Assets.xcassets */; };
 		C4FBCB3D1F5FC7D000148BCC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C4FBCB3B1F5FC7D000148BCC /* Main.storyboard */; };
 		C4FBCB481F5FC7D000148BCC /* stockFishTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB471F5FC7D000148BCC /* stockFishTests.swift */; };
 		C4FBCB531F5FC7D000148BCC /* stockFishUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB521F5FC7D000148BCC /* stockFishUITests.swift */; };
+		C4FBCB611F5FC85E00148BCC /* stockFishController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB601F5FC85E00148BCC /* stockFishController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +36,6 @@
 /* Begin PBXFileReference section */
 		C4FBCB2F1F5FC7D000148BCC /* stockFish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = stockFish.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C4FBCB341F5FC7D000148BCC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C4FBCB371F5FC7D000148BCC /* stockFish.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = stockFish.xcdatamodel; sourceTree = "<group>"; };
 		C4FBCB391F5FC7D000148BCC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C4FBCB3C1F5FC7D000148BCC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -47,6 +46,7 @@
 		C4FBCB4E1F5FC7D000148BCC /* stockFishUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = stockFishUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4FBCB521F5FC7D000148BCC /* stockFishUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = stockFishUITests.swift; sourceTree = "<group>"; };
 		C4FBCB541F5FC7D000148BCC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C4FBCB601F5FC85E00148BCC /* stockFishController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stockFishController.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,12 +97,9 @@
 		C4FBCB311F5FC7D000148BCC /* stockFish */ = {
 			isa = PBXGroup;
 			children = (
-				C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */,
-				C4FBCB341F5FC7D000148BCC /* ViewController.swift */,
-				C4FBCB391F5FC7D000148BCC /* Assets.xcassets */,
+				C4FBCB601F5FC85E00148BCC /* stockFishController.swift */,
 				C4FBCB3B1F5FC7D000148BCC /* Main.storyboard */,
-				C4FBCB3E1F5FC7D000148BCC /* Info.plist */,
-				C4FBCB361F5FC7D000148BCC /* stockFish.xcdatamodeld */,
+				C4FBCB621F5FC88D00148BCC /* + */,
 			);
 			path = stockFish;
 			sourceTree = "<group>";
@@ -123,6 +120,17 @@
 				C4FBCB541F5FC7D000148BCC /* Info.plist */,
 			);
 			path = stockFishUITests;
+			sourceTree = "<group>";
+		};
+		C4FBCB621F5FC88D00148BCC /* + */ = {
+			isa = PBXGroup;
+			children = (
+				C4FBCB361F5FC7D000148BCC /* stockFish.xcdatamodeld */,
+				C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */,
+				C4FBCB391F5FC7D000148BCC /* Assets.xcassets */,
+				C4FBCB3E1F5FC7D000148BCC /* Info.plist */,
+			);
+			name = "+";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -261,7 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4FBCB351F5FC7D000148BCC /* ViewController.swift in Sources */,
+				C4FBCB611F5FC85E00148BCC /* stockFishController.swift in Sources */,
 				C4FBCB381F5FC7D000148BCC /* stockFish.xcdatamodeld in Sources */,
 				C4FBCB331F5FC7D000148BCC /* AppDelegate.swift in Sources */,
 			);
