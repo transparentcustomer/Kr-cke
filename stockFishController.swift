@@ -17,24 +17,33 @@ class stockFishController: NSViewController {
     /*
      implement
      */
-    var testVariable = 5
+    var brain = stockBrain()
     
-    var stockTableViewData = [[String:String]]()
-    
-    
-    @IBAction func addStock(_ sender: NSButton)
-    {
-        stockTableViewData.insert([
-            "code"      : stockCode.stringValue,
-            "name"      : "no name",
-            "lastprice" : "no price"
-            
-            ], at: 0)
-        
-        stockTableView.reloadData()
+    var stockTableViewData = [[String:String]](){
+        didSet{
+            print("the model changed")
+            stockTableView.reloadData()//.. every time the model (data) changes - the view get reloaded
+        }
     }
     
+    //MARK: - Actions
+    @IBAction func update(_ sender: NSButton) {
+        brain.getUpdates()
+    }
+    @IBAction func addStock(_ sender: NSButton)
+    {
+        if stockCode.stringValue.isEmpty   {}else{
+            
+            let insertedYahooSymbol = stockCode.stringValue
+            
+            stockTableViewData = (brain.fillStockArray(insertedYahooSymbol))
+    }
+
+        
+        
+    }
     
+    //MARK: -
     override func viewDidLoad() {
         super.viewDidLoad()
         self.stockTableView.delegate = self
