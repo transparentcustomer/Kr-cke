@@ -65,16 +65,20 @@ struct stockBrain{
 
             //FIXME:  .. beware of cycling //.. in the case of no stock belonging to a symbol
             let symbol = item["code"]!
-            var stockName:String?
+            var stockName       :String?
+            var stockLastPrice  :String?
+            
             //MARK: get the name
             if item["name"] == "no info" {
                 
-                stockName =  stockPuller.getStockName(yahoosymbol: symbol)
+                stockName       =  stockPuller.getStockName(yahoosymbol: symbol)
+                stockLastPrice  =  stockPuller.getLastPrice(yahoosymbol: symbol)
                 //FIXME: ..toDelete
                 //print("\(String(describing: item["code"]!)) has no name yet")
                 print("stockName: \(stockName)")
                 
-                yahooStockDataArray[index].updateValue(stockName!, forKey: "name")
+                yahooStockDataArray[index].updateValue(stockName!,      forKey: "name")
+                yahooStockDataArray[index].updateValue(stockLastPrice!, forKey: "lastprice")
                 
             }
             

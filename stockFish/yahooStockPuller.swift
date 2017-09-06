@@ -136,7 +136,7 @@ struct yahooPuller{
         
         
         
-        var URLstring = completeYahooURL(yahoosymbol)
+        let URLstring = completeYahooURL(yahoosymbol, "n")
         //FIXME: ..toDelete
         //..print("URL to get the name for: \(yahoosymbol): \(URLstring)")
         
@@ -146,14 +146,26 @@ struct yahooPuller{
         return stockName!
     }
     
+    func getLastPrice(yahoosymbol: String) -> String {
+        
+        var lastPrice:String?
+        
+        let URLstring = completeYahooURL(yahoosymbol, "l1")
+        lastPrice = downloadDataWithURL(yahoourlstring: URLstring)
+        
+        
+        return lastPrice!
+        
+    }
+    
     
     //MARK: format yahoo link
-    func completeYahooURL (_ symbol: String)->String
+    func completeYahooURL (_ symbol: String,_ value: String)->String
         
     {print(#function, #line)
         
-        let symbolLetter = "n"
-        let yahooURLstring =  "http://download.finance.yahoo.com/d/quotes.csv?s=\(symbol)&f=\(symbolLetter)"
+//        let symbolLetter = "n"
+        let yahooURLstring =  "http://download.finance.yahoo.com/d/quotes.csv?s=\(symbol)&f=\(value)"
         
         
         return yahooURLstring
@@ -183,9 +195,9 @@ struct yahooPuller{
     func dataStringProcesser (dataFromURL: String)->String{
         var processedStringData:String?
         
-      
+        
         processedStringData = dataFromURL.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
-
+        
         return processedStringData ?? dataFromURL
     }
     
