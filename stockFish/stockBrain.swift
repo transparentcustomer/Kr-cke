@@ -96,7 +96,7 @@ struct stockBrain{
         {
             
             //FIXME:  .. beware of cycling //.. in the case of no stock belonging to a symbol
-            let symbol = item["code"]!
+            let symbol          = item["code"]!
             var stockName       :String?
             var stockLastPrice  :String?
             

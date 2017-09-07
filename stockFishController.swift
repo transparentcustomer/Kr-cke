@@ -30,8 +30,13 @@ class stockFishController: NSViewController {
     //MARK: - Actions
     @IBAction func update(_ sender: NSButton) {
         //FIXME: progess indcator broken
+        
         progress.isHidden = false
         progress.startAnimation(nil)
+        
+        
+            
+            stockTableViewData = brain.getUpdates()
         
         stockTableViewData = brain.getUpdates()
         
@@ -48,21 +53,31 @@ class stockFishController: NSViewController {
         
         var symbolArray = brain.useCSV()
         print("there are \(symbolArray.count) possible symbols available")
-        let restrictedSymbolArray = symbolArray[1777..<1788]
+        let restrictedSymbolArray = symbolArray[300..<600]
         
         print("number of symbols in the list: \(restrictedSymbolArray.count)")
         
         //MARK: automatic insertion
-        if stockCode.stringValue.isEmpty{
-            print("this happens if something is empty")
-            print("symbolArray\(symbolArray)")
+        //FIXME: DispatchQueue - corretly placed and efficient???
+
+        DispatchQueue.main.async { [unowned self] in
             
-            for symbol  in  restrictedSymbolArray{
+            
+            
+            if self.stockCode.stringValue.isEmpty{
+                print("this happens if something is empty")
+                print("symbolArray\(symbolArray)")
                 
-                let insertedYahooSymbol = symbol
-                stockTableViewData = (brain.fillStockArray(insertedYahooSymbol))
+                for symbol  in  restrictedSymbolArray{
+                    
+                    let insertedYahooSymbol = symbol
+                    self.stockTableViewData = (self.brain.fillStockArray(insertedYahooSymbol))
+                }
             }
+            
         }
+        
+        
         
         //MARK: serperate insertion
         if !stockCode.stringValue.isEmpty   {
