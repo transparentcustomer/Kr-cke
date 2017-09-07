@@ -75,7 +75,6 @@ struct stockBrain{
                 stockLastPrice  =  stockPuller.getLastPrice(yahoosymbol: symbol)
                 //FIXME: ..toDelete
                 //print("\(String(describing: item["code"]!)) has no name yet")
-                print("stockName: \(stockName)")
                 
                 yahooStockDataArray[index].updateValue(stockName!,      forKey: "name")
                 yahooStockDataArray[index].updateValue(stockLastPrice!, forKey: "lastprice")

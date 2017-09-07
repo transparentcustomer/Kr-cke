@@ -44,6 +44,18 @@ class stockFishController: NSViewController {
         }
     }
     
+    @IBAction func clearTable(_ sender: NSButton) {
+        
+        stockTableViewData.removeAll()
+        updateUI()
+    }
+    
+    @IBAction func removeRow(_ sender: NSButton) {
+        stockTableViewData.remove(at: stockTableView.selectedRow)
+        updateUI()
+        
+    }
+    
     
     func updateUI(){
         
