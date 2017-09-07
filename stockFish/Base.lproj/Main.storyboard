@@ -870,9 +870,14 @@
                                     <action selector="removeRow:" target="GN6-8j-HBq" id="D6f-6M-Nsb"/>
                                 </connections>
                             </button>
+                            <progressIndicator hidden="YES" wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="HKL-Uu-aYx">
+                                <rect key="frame" x="26" y="257" width="16" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </progressIndicator>
                         </subviews>
                     </view>
                     <connections>
+                        <outlet property="progress" destination="HKL-Uu-aYx" id="FHJ-tG-kqK"/>
                         <outlet property="stockCode" destination="ZAE-xL-7sy" id="GsH-KU-yYi"/>
                         <outlet property="stockTableView" destination="Ujh-F4-aSo" id="DOR-yt-lsl"/>
                     </connections>

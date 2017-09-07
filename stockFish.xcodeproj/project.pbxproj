@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C4EBB8761F61274D00BD0E5D /* yahooSymbols.csv in Resources */ = {isa = PBXBuildFile; fileRef = C4EBB8751F61274D00BD0E5D /* yahooSymbols.csv */; };
 		C4FBCB331F5FC7D000148BCC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */; };
 		C4FBCB381F5FC7D000148BCC /* stockFish.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB361F5FC7D000148BCC /* stockFish.xcdatamodeld */; };
 		C4FBCB3A1F5FC7D000148BCC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C4FBCB391F5FC7D000148BCC /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C4EBB8751F61274D00BD0E5D /* yahooSymbols.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = yahooSymbols.csv; sourceTree = "<group>"; };
 		C4FBCB2F1F5FC7D000148BCC /* stockFish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = stockFish.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C4FBCB371F5FC7D000148BCC /* stockFish.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = stockFish.xcdatamodel; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 		C4FBCB621F5FC88D00148BCC /* + */ = {
 			isa = PBXGroup;
 			children = (
+				C4EBB8751F61274D00BD0E5D /* yahooSymbols.csv */,
 				C4FBCB361F5FC7D000148BCC /* stockFish.xcdatamodeld */,
 				C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */,
 				C4FBCB391F5FC7D000148BCC /* Assets.xcassets */,
@@ -281,6 +284,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4EBB8761F61274D00BD0E5D /* yahooSymbols.csv in Resources */,
 				C4FBCB3A1F5FC7D000148BCC /* Assets.xcassets in Resources */,
 				C4FBCB3D1F5FC7D000148BCC /* Main.storyboard in Resources */,
 			);
@@ -559,6 +563,7 @@
 				C4FBCB591F5FC7D000148BCC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C4FBCB5A1F5FC7D000148BCC /* Build configuration list for PBXNativeTarget "stockFishTests" */ = {
 			isa = XCConfigurationList;
@@ -567,6 +572,7 @@
 				C4FBCB5C1F5FC7D000148BCC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C4FBCB5D1F5FC7D000148BCC /* Build configuration list for PBXNativeTarget "stockFishUITests" */ = {
 			isa = XCConfigurationList;
@@ -575,6 +581,7 @@
 				C4FBCB5F1F5FC7D000148BCC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

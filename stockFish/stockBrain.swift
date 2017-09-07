@@ -8,7 +8,7 @@
 
 import Foundation
 
-
+let yahooSymbolPLIST = Bundle.main.path(forResource: "symbolData", ofType: "plist")!
 
 struct stockBrain{
     
@@ -18,7 +18,7 @@ struct stockBrain{
     
     var yahooStockDataArray =   [[String:String]]()
     
-//    var stockTableViewData = [[String:String]]()
+    //    var stockTableViewData = [[String:String]]()
     
     //FIXME: ..toDelete:
     /*
@@ -52,6 +52,38 @@ struct stockBrain{
     }
     
     
+    
+    func useCSV()-> Array<String>
+    {
+        //FIXME: CLEANUP the MESS
+        var yahooSymbols : [String] = []
+        do {
+            // This solution assumes  you've got the file in your bundle
+            if let path = Bundle.main.path(forResource: "yahooSymbols", ofType: "csv"){
+                // STORE CONTENT OF FILE IN VARIABLE
+                let data = try String(contentsOfFile:path, encoding: String.Encoding.utf8)
+                
+                //                var readData =  [String]()
+                yahooSymbols = data.components(separatedBy: "\r")
+                
+                
+                //                let kommastring = symbolString.replacingOccurrences(of: "\r", with: "💩")
+                
+                print("yahooSymbols: \(yahooSymbols[3])")
+                
+                
+            }
+        } catch let err as NSError {
+            // do something with Error}
+            print(err)
+            print("there is an error in processing the CSV file")
+        }
+        
+        
+        return yahooSymbols
+    }
+    
+    
     //MARK: - get Yahoo Info:
     mutating func getUpdates() -> ([[String : String]])
     { //.. to get stock names and price values
@@ -62,7 +94,7 @@ struct stockBrain{
         
         for (index,var item) in yahooStockDataArray.enumerated()
         {
-
+            
             //FIXME:  .. beware of cycling //.. in the case of no stock belonging to a symbol
             let symbol = item["code"]!
             var stockName       :String?
@@ -91,7 +123,7 @@ struct stockBrain{
             
         }
         print("yahooStockDataArray: \(yahooStockDataArray)")
-       return yahooStockDataArray
+        return yahooStockDataArray
     }
     
     
