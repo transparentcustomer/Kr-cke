@@ -18,24 +18,6 @@ struct stockBrain{
     
     var yahooStockDataArray =   [[String:String]]()
     
-    //    var stockTableViewData = [[String:String]]()
-    
-    //FIXME: ..toDelete:
-    /*
-     mutating func getStockValues (_ stockCode: String?){
-     yahooSymbol = stockCode
-     
-     if stockCode != "" {
-     stockSymbolArray.insert( (yahooSymbol ?? "no symb found"), at: 0) //.. nil-coalescing operator
-     print("shit")
-     
-     }else{print("no symbol inserted")}
-     
-     
-     print("stockSymbolArray: \(stockSymbolArray)")
-     }
-     */
-    
     
     //MARK: - filling of model with symbols
     mutating func fillStockArray(_ stockCode: String) -> [[String:String]] {
@@ -58,17 +40,15 @@ struct stockBrain{
         //FIXME: CLEANUP the MESS
         var yahooSymbols : [String] = []
         do {
-            // This solution assumes  you've got the file in your bundle
+            
             if let path = Bundle.main.path(forResource: "yahooSymbols", ofType: "csv"){
-                // STORE CONTENT OF FILE IN VARIABLE
+                //.. STORE CONTENT OF FILE IN VARIABLE:
                 let data = try String(contentsOfFile:path, encoding: String.Encoding.utf8)
                 
-                //                var readData =  [String]()
-                yahooSymbols = data.components(separatedBy: "\r")
+                yahooSymbols = data.components(separatedBy: "\r") //.. removal of return commands from String
                 
                 
-                //                let kommastring = symbolString.replacingOccurrences(of: "\r", with: "💩")
-                
+                               
                 print("yahooSymbols: \(yahooSymbols[3])")
                 
                 

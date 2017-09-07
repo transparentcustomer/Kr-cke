@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C48ECA731F616DF7000C4AEF /* stockFish_timeline.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C48ECA721F616DF7000C4AEF /* stockFish_timeline.rtf */; };
 		C4EBB8761F61274D00BD0E5D /* yahooSymbols.csv in Resources */ = {isa = PBXBuildFile; fileRef = C4EBB8751F61274D00BD0E5D /* yahooSymbols.csv */; };
 		C4FBCB331F5FC7D000148BCC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */; };
 		C4FBCB381F5FC7D000148BCC /* stockFish.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB361F5FC7D000148BCC /* stockFish.xcdatamodeld */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C48ECA721F616DF7000C4AEF /* stockFish_timeline.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = stockFish_timeline.rtf; path = stockFish/stockFish_timeline.rtf; sourceTree = "<group>"; };
 		C4EBB8751F61274D00BD0E5D /* yahooSymbols.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = yahooSymbols.csv; sourceTree = "<group>"; };
 		C4FBCB2F1F5FC7D000148BCC /* stockFish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = stockFish.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 		C4FBCB261F5FC7D000148BCC = {
 			isa = PBXGroup;
 			children = (
+				C48ECA721F616DF7000C4AEF /* stockFish_timeline.rtf */,
 				C4FBCB311F5FC7D000148BCC /* stockFish */,
 				C4FBCB461F5FC7D000148BCC /* stockFishTests */,
 				C4FBCB511F5FC7D000148BCC /* stockFishUITests */,
@@ -284,6 +287,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C48ECA731F616DF7000C4AEF /* stockFish_timeline.rtf in Resources */,
 				C4EBB8761F61274D00BD0E5D /* yahooSymbols.csv in Resources */,
 				C4FBCB3A1F5FC7D000148BCC /* Assets.xcassets in Resources */,
 				C4FBCB3D1F5FC7D000148BCC /* Main.storyboard in Resources */,

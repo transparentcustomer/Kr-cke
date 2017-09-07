@@ -53,7 +53,7 @@ class stockFishController: NSViewController {
         
         var symbolArray = brain.useCSV()
         print("there are \(symbolArray.count) possible symbols available")
-        let restrictedSymbolArray = symbolArray[300..<600]
+        let restrictedSymbolArray = symbolArray[1..<50]
         
         print("number of symbols in the list: \(restrictedSymbolArray.count)")
         

@@ -134,12 +134,7 @@ struct yahooPuller{
         
         var stockName:String?
         
-        
-        
-        let URLstring = completeYahooURL(yahoosymbol, "n")
-        //FIXME: ..toDelete
-        //..print("URL to get the name for: \(yahoosymbol): \(URLstring)")
-        
+        let URLstring = completeYahooURL(yahoosymbol, "n") //.. "n" is name
         stockName = downloadDataWithURL(yahoourlstring: URLstring)
         
         
@@ -150,7 +145,7 @@ struct yahooPuller{
         
         var lastPrice:String?
         
-        let URLstring = completeYahooURL(yahoosymbol, "l1")
+        let URLstring = completeYahooURL(yahoosymbol, "l1")//.. "l1" last price
         lastPrice = downloadDataWithURL(yahoourlstring: URLstring)
         
         
@@ -164,9 +159,7 @@ struct yahooPuller{
         
     {print(#function, #line)
         
-//        let symbolLetter = "n"
         let yahooURLstring =  "http://download.finance.yahoo.com/d/quotes.csv?s=\(symbol)&f=\(value)"
-        
         
         return yahooURLstring
     }
@@ -184,10 +177,8 @@ struct yahooPuller{
             
         }
         
-        let processedData = dataStringProcesser(dataFromURL: dataFromURL!)
-        
-        dataFromURL = processedData
-        print("processedDataFromURL:\(String(describing: dataFromURL))")
+        dataFromURL = dataStringProcesser(dataFromURL: dataFromURL!)
+              
         
         return dataFromURL ?? "no data available"
     }
