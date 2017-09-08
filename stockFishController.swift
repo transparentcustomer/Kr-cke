@@ -35,8 +35,8 @@ class stockFishController: NSViewController {
         progress.startAnimation(nil)
         
         
-            
-            stockTableViewData = brain.getUpdates()
+        
+        stockTableViewData = brain.getUpdates()
         
         stockTableViewData = brain.getUpdates()
         
@@ -53,13 +53,13 @@ class stockFishController: NSViewController {
         
         var symbolArray = brain.useCSV()
         print("there are \(symbolArray.count) possible symbols available")
-        let restrictedSymbolArray = symbolArray[1..<50]
+        let restrictedSymbolArray = symbolArray[1..<5]
         
         print("number of symbols in the list: \(restrictedSymbolArray.count)")
         
         //MARK: automatic insertion
         //FIXME: DispatchQueue - corretly placed and efficient???
-
+        
         DispatchQueue.main.async { [unowned self] in
             
             
@@ -90,12 +90,18 @@ class stockFishController: NSViewController {
     @IBAction func clearTable(_ sender: NSButton) {
         
         stockTableViewData.removeAll()
+        brain.yahooStockDataArray.removeAll()
         updateUI()
     }
     
-    @IBAction func removeRow(_ sender: NSButton) {
-        stockTableViewData.remove(at: stockTableView.selectedRow)
-        updateUI()
+    @IBAction func removeRow(_ sender: NSButton)
+    {
+        
+        if stockTableView.isRowSelected(stockTableView.selectedRow)
+        {
+            stockTableViewData.remove(at: stockTableView.selectedRow)
+            updateUI()
+        }
         
     }
     
