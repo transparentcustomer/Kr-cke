@@ -22,7 +22,7 @@ class stockFishController: NSViewController {
     
     var stockTableViewData = [[String:String]](){
         didSet{
-            print("the model changed")
+            
             updateUI() //.. every time the model (data) changes - the view get reloaded
         }
     }
@@ -52,10 +52,8 @@ class stockFishController: NSViewController {
         //FIXME: CLEANUP the MESS
         
         var symbolArray = brain.useCSV()
-        print("there are \(symbolArray.count) possible symbols available")
         let restrictedSymbolArray = symbolArray[1..<5]
         
-        print("number of symbols in the list: \(restrictedSymbolArray.count)")
         
         //MARK: automatic insertion
         //FIXME: DispatchQueue - corretly placed and efficient???
@@ -65,8 +63,7 @@ class stockFishController: NSViewController {
             
             
             if self.stockCode.stringValue.isEmpty{
-                print("this happens if something is empty")
-                print("symbolArray\(symbolArray)")
+                
                 
                 for symbol  in  restrictedSymbolArray{
                     

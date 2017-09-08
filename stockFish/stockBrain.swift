@@ -10,7 +10,8 @@ import Foundation
 
 let yahooSymbolPLIST = Bundle.main.path(forResource: "symbolData", ofType: "plist")!
 
-struct stockBrain{
+struct stockBrain
+{
     
     var stockPuller = yahooPuller()
     
@@ -18,22 +19,20 @@ struct stockBrain{
     
     var yahooStockDataArray =   [[String:String]]()
     
-    
     //MARK: - filling of model with symbols
-    mutating func fillStockArray(_ stockCode: String) -> [[String:String]] {
-        print("test")
-        yahooStockDataArray.insert([
-            
-            "code"      : stockCode,
-            "name"      : "no info",
-            "lastprice" : "no info"
-            
+    mutating func fillStockArray(_ stockCode: String) -> [[String:String]]
+    {
+        
+        yahooStockDataArray.insert(
+            [
+                "code"      : stockCode,
+                "name"      : "no info",
+                "lastprice" : "no info"
+                
             ], at: 0)
         
         return yahooStockDataArray
     }
-    
-    
     
     func useCSV()-> Array<String>
     {
@@ -41,16 +40,12 @@ struct stockBrain{
         var yahooSymbols : [String] = []
         do {
             
-            if let path = Bundle.main.path(forResource: "yahooSymbols", ofType: "csv"){
+            if let path = Bundle.main.path(forResource: "yahooSymbols", ofType: "csv")
+            {
                 //.. STORE CONTENT OF FILE IN VARIABLE:
                 let data = try String(contentsOfFile:path, encoding: String.Encoding.utf8)
                 
                 yahooSymbols = data.components(separatedBy: "\r") //.. removal of return commands from String
-                
-                
-                               
-                print("yahooSymbols: \(yahooSymbols[3])")
-                
                 
             }
         } catch let err as NSError {
@@ -58,19 +53,12 @@ struct stockBrain{
             print(err)
             print("there is an error in processing the CSV file")
         }
-        
-        
         return yahooSymbols
     }
-    
     
     //MARK: - get Yahoo Info:
     mutating func getUpdates() -> ([[String : String]])
     { //.. to get stock names and price values
-        //FIXME: ..toDelete
-        //print("yahooStockDataArray: \(yahooStockDataArray)")
-        
-        
         
         for (index,var item) in yahooStockDataArray.enumerated()
         {
@@ -81,31 +69,17 @@ struct stockBrain{
             var stockLastPrice  :String?
             
             //MARK: get the name
-            if item["name"] == "no info" {
+            if item["name"] == "no info"
+            {
                 
                 stockName       =  stockPuller.getStockName(yahoosymbol: symbol)
                 stockLastPrice  =  stockPuller.getLastPrice(yahoosymbol: symbol)
-                //FIXME: ..toDelete
-                //print("\(String(describing: item["code"]!)) has no name yet")
                 
                 yahooStockDataArray[index].updateValue(stockName!,      forKey: "name")
                 yahooStockDataArray[index].updateValue(stockLastPrice!, forKey: "lastprice")
                 
             }
-            
-            
-            
-            
-            
-            
-            //FIXME: ..toDelete
-            //print("Diagnose: \(diagnose)")
-            
         }
-        print("yahooStockDataArray: \(yahooStockDataArray)")
         return yahooStockDataArray
     }
-    
-    
-    
 }
