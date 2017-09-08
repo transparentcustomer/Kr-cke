@@ -14,10 +14,6 @@ class stockFishController: NSViewController {
     @IBOutlet weak var stockCode: NSTextField!
     @IBOutlet weak var progress: NSProgressIndicator!
     
-    //..
-    /*
-     implement
-     */
     var brain = stockBrain()
     
     var stockTableViewData = [[String:String]](){
@@ -33,10 +29,6 @@ class stockFishController: NSViewController {
         
         progress.isHidden = false
         progress.startAnimation(nil)
-        
-        
-        
-        stockTableViewData = brain.getUpdates()
         
         stockTableViewData = brain.getUpdates()
         
@@ -58,26 +50,31 @@ class stockFishController: NSViewController {
         //MARK: automatic insertion
         //FIXME: DispatchQueue - corretly placed and efficient???
         
-        DispatchQueue.main.async { [unowned self] in
-            
-            
-            
-            if self.stockCode.stringValue.isEmpty{
-                
-                
-                for symbol  in  restrictedSymbolArray{
-                    
-                    let insertedYahooSymbol = symbol
-                    self.stockTableViewData = (self.brain.fillStockArray(insertedYahooSymbol))
-                }
+        
+        if stockCode.stringValue == "test"
+        {
+            stockCode.stringValue.removeAll()
+            print("bullshit")
+            let symbolArray:[String] = ["AAPL","ABC","MMM"]
+            for symbol in symbolArray
+            {
+                stockTableViewData = brain.fillStockArray(symbol)
             }
             
-        }
-        
-        
-        
-        //MARK: serperate insertion
-        if !stockCode.stringValue.isEmpty   {
+        }else if self.stockCode.stringValue.isEmpty
+        {
+            DispatchQueue.main.async
+                { [unowned self] in
+                    
+                    for symbol  in  restrictedSymbolArray
+                    {
+                        let insertedYahooSymbol = symbol
+                        self.stockTableViewData = (self.brain.fillStockArray(insertedYahooSymbol))
+                    }
+            }
+            
+        }else if !stockCode.stringValue.isEmpty
+        {//MARK: serperate insertion
             
             let insertedYahooSymbol = stockCode.stringValue
             stockTableViewData = (brain.fillStockArray(insertedYahooSymbol))
