@@ -88,6 +88,7 @@ class stockFishController: NSViewController {
         
         stockTableViewData.removeAll()
         brain.yahooStockDataArray.removeAll()
+        stockCode.stringValue.removeAll()
         updateUI()
     }
     
