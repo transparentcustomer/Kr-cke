@@ -29,7 +29,8 @@ class stockFishController: NSViewController {
         
         progress.isHidden = false
         progress.startAnimation(nil)
-        
+       
+
         stockTableViewData = brain.getUpdates()
         
         
@@ -44,7 +45,16 @@ class stockFishController: NSViewController {
         //FIXME: CLEANUP the MESS
         
         var symbolArray = brain.useCSV()
-        let restrictedSymbolArray = symbolArray[1..<5]
+        
+        print("symbolArray.count: \(symbolArray.count)")
+//        let restrictedSymbolArray = symbolArray[0..<20].reversed()
+      
+        let restrictedSymbolArray = symbolArray[27600...symbolArray.count-1].reversed()
+//        let restrictedSymbolArray = symbolArray[0...10].reversed()
+        //.. tot 27607
+        //start form 16000
+        
+
         
         
         //MARK: automatic insertion
@@ -54,12 +64,79 @@ class stockFishController: NSViewController {
         if stockCode.stringValue == "test"
         {
             stockCode.stringValue.removeAll()
-            print("bullshit")
-            let symbolArray:[String] = ["AAPL","ABC","MMM"]
+            
+            let symbolArray = restrictedSymbolArray
+
+            
             for symbol in symbolArray
             {
                 stockTableViewData = brain.fillStockArray(symbol)
             }
+            
+            var symbolArrayString = ""
+            
+            for symbol in symbolArray
+            {
+                print("symbol: \(symbol)")
+                
+                if symbolArrayString == "" {
+                    symbolArrayString = symbolArrayString+symbol
+                }else{
+                    symbolArrayString = symbolArrayString+","+symbol
+                }
+            }
+
+            
+            print("symbolArrayString: \(String(describing: symbolArrayString))")
+            
+            let multiLastPriceURLstring = "http://download.finance.yahoo.com/d/quotes.csv?s=\(symbolArrayString)&f=n,l1"
+            print("multiLastPriceURLstring: \(multiLastPriceURLstring)")
+            //"http://download.finance.yahoo.com/d/quotes.csv?s=AAPL,ABC,MMM&f=n,l1"
+
+            var dataFromURL: String?
+            
+            let yahooURL = URL(string: multiLastPriceURLstring)
+            
+            if let stringForValue = try? String(contentsOf: yahooURL!, encoding: String.Encoding.utf8)
+                
+            {dataFromURL = stringForValue as String}
+            
+            var dataFromURLasArray = dataFromURL?.components(separatedBy: "\n")
+            
+            //MARK: process the data
+            dataFromURLasArray?.remove(at: (dataFromURLasArray?.count)!-1)
+            
+            
+            //seperateStockInfo
+            
+            dataFromURLasArray = dataFromURLasArray?.reversed()
+            
+            for (index, seperatecomponents) in dataFromURLasArray!.enumerated(){
+                
+                let indexArray = index
+                //let indexArray = ((dataFromURLasArray?.count)!-index)
+                let (seperateComponents) = seperatecomponents.components(separatedBy: ",N/A,")
+                
+                var theName         = seperateComponents[0]
+                let theLastPrice    = seperateComponents[1]
+                
+                
+                
+                theName = theName.replacingOccurrences(of: "\"", with: "", options: .regularExpression)
+
+                
+                stockTableViewData[indexArray].updateValue(theName, forKey: "name")
+                stockTableViewData[indexArray].updateValue(theLastPrice, forKey: "lastprice")
+                
+                print("restrictedSymbolArray: \(restrictedSymbolArray)")
+                
+                
+                
+            }
+            
+            print("number of symbols: \(restrictedSymbolArray.count+1)")
+            print("number of names: \(restrictedSymbolArray.count)")
+            print("number of prices: \(restrictedSymbolArray.count)")
             
         }else if self.stockCode.stringValue.isEmpty
         {
@@ -70,14 +147,22 @@ class stockFishController: NSViewController {
                     {
                         let insertedYahooSymbol = symbol
                         self.stockTableViewData = (self.brain.fillStockArray(insertedYahooSymbol))
+                        
+                        
                     }
+                    
+                    
+                    
             }
             
         }else if !stockCode.stringValue.isEmpty
-        {//MARK: serperate insertion
+        {//MARK: 🔥 serperate insertion
             
             let insertedYahooSymbol = stockCode.stringValue
             stockTableViewData = (brain.fillStockArray(insertedYahooSymbol))
+           
+            
+            
         }
     }
     
@@ -101,6 +186,13 @@ class stockFishController: NSViewController {
     }
     
     
+    
+    @IBAction func test(_ sender: NSButton)
+    {
+        brain.searchCSVforBrokenSymbols()
+        updateUI()
+    }
+ 
     func updateUI(){
         
         stockTableView.reloadData()

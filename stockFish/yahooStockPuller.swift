@@ -20,6 +20,8 @@ struct yahooPuller{
         let URLstring = completeYahooURL(yahoosymbol, "n") //.. "n" is name
         stockName = downloadDataWithURL(yahoourlstring: URLstring)
         
+        print("URLstring: \(URLstring))")
+        print("thats the point where it breaks: \(String(describing: stockName))")
         
         return stockName!
     }
@@ -40,10 +42,11 @@ struct yahooPuller{
     //MARK: format yahoo link
     func completeYahooURL (_ symbol: String,_ value: String)->String
         
-    {print(#function, #line)
+    {
+//        print(#function, #line)
         
         let yahooURLstring =  "http://download.finance.yahoo.com/d/quotes.csv?s=\(symbol)&f=\(value)"
-        
+        //"http://download.finance.yahoo.com/d/quotes.csv?s=AAPL&f=n"
         return yahooURLstring
     }
     

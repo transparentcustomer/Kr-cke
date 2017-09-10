@@ -60,17 +60,25 @@ struct stockBrain
     mutating func getUpdates() -> ([[String : String]])
     { //.. to get stock names and price values
         
+        
+        
         for (index,var item) in yahooStockDataArray.enumerated()
         {
-            
-            //FIXME:  .. beware of cycling //.. in the case of no stock belonging to a symbol
+            print("shitshitshit\(item)")
+            //FIXME: 🔥 .. beware of cycling //.. in the case of no stock belonging to a symbol
             let symbol          = item["code"]!
             var stockName       :String?
             var stockLastPrice  :String?
             
+            
+           
+            
+            
             //MARK: get the name
             if item["name"] == "no info"
             {
+                
+                print("shitshitshit\(item)")
                 
                 stockName       =  stockPuller.getStockName(yahoosymbol: symbol)
                 stockLastPrice  =  stockPuller.getLastPrice(yahoosymbol: symbol)
@@ -78,8 +86,67 @@ struct stockBrain
                 yahooStockDataArray[index].updateValue(stockName!,      forKey: "name")
                 yahooStockDataArray[index].updateValue(stockLastPrice!, forKey: "lastprice")
                 
+                print("\(yahooStockDataArray.count-index-1) operations remain")
             }
+            
         }
         return yahooStockDataArray
+    }
+    mutating func searchCSVforBrokenSymbols()
+    {
+        print("test searchCSVforBrokenSymbols")
+        
+        var emptySymbolCount = 0
+        var brokenSymbList = [String]()
+        var repairedSymbList = [String]()
+        
+        for (index,var item) in yahooStockDataArray.enumerated()
+        {
+            
+            
+            let symbol          = item["code"]!
+            var stockName       :String?
+            
+            
+            
+            
+            //MARK: get the name
+            if item["name"] == "no info"
+            {
+                
+                stockName       =  stockPuller.getStockName(yahoosymbol: symbol)
+                
+                yahooStockDataArray[index].updateValue(stockName!,      forKey: "name")
+                
+                
+                if stockName == ""
+                {
+                    print("the symbol \(symbol) is empty - its on position \(index+1)")
+                    emptySymbolCount = emptySymbolCount+1
+                    brokenSymbList.insert(symbol, at: 0)
+                    
+                    
+                }else {
+                    repairedSymbList.insert(symbol, at: 0)
+                }
+                print("\(yahooStockDataArray.count-index) of \(yahooStockDataArray.count) remain")
+            }
+            
+        }
+        print("\(String(describing: emptySymbolCount)) symbols are 💩")
+        print("brokenSymbList: \(brokenSymbList)")
+        brokenSymbList = brokenSymbList.reversed()
+        
+        repairedSymbList = repairedSymbList.reversed()
+        for item in brokenSymbList
+        {
+         print(item)
+        }
+        print("")
+        print("repairedSymbList: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        for item in repairedSymbList
+        {
+            print(item)
+        }
     }
 }

@@ -82,6 +82,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C4D85CB31F654BFB00460F22 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
+			sourceTree = "<group>";
+		};
 		C4FBCB261F5FC7D000148BCC = {
 			isa = PBXGroup;
 			children = (
@@ -136,6 +143,7 @@
 		C4FBCB621F5FC88D00148BCC /* + */ = {
 			isa = PBXGroup;
 			children = (
+				C4D85CB31F654BFB00460F22 /* New Group */,
 				C4EBB8751F61274D00BD0E5D /* yahooSymbols.csv */,
 				C4FBCB361F5FC7D000148BCC /* stockFish.xcdatamodeld */,
 				C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */,

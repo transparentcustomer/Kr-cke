@@ -3,30 +3,18 @@
 import Cocoa
 
 
-var str = "Hello playground this is a test"
+let file: FileHandle? = FileHandle(forWritingAtPath: "output.txt")
 
-//var arsch = str.components(separatedBy: " ")
-//
-//var ari = [[String]]()
-//
-//for word in arsch {
-//    ari.insert([word], at: 0)
-//    print("\(ari[0])")
-//}
-//
-//print("\(ari[0])")
-//print("\(arsch[0])")
-
-
-let stringNumbers = "1 2 10"
-var arrayIntegers = stringNumbers.components(separatedBy: " ").flatMap { Int($0) }
-
-arrayIntegers[0]
-
-let stringLetter = "Alle meine Hasen"
-var arrayLetter = stringLetter.components(separatedBy: " ").flatMap { String($0) }
-
-arrayLetter[0]
-var array = ["1|First", "2|Second", "3|Third"]
-
-let newarray = array.map { $0.componentsSeparatedByString(", ")[1] }
+if file != nil {
+    // Set the data we want to write
+    let data = ("Silentium est aureum" as NSString).data(using: String.Encoding.utf8.rawValue)
+    
+    // Write it to the file
+    file?.write(data!)
+    
+    // Close the file
+    file?.closeFile()
+}
+else {
+    print("Ooops! Something went wrong!")
+}
