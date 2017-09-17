@@ -20,8 +20,10 @@ struct yahooPuller{
         let URLstring = completeYahooURL(yahoosymbol, "n") //.. "n" is name
         stockName = downloadDataWithURL(yahoourlstring: URLstring)
         
-        print("URLstring: \(URLstring))")
-        print("thats the point where it breaks: \(String(describing: stockName))")
+        
+        //FIXME:  toDelete
+//        print("URLstring: \(URLstring))")
+//        print("thats the point where it breaks: \(String(describing: stockName))")
         
         return stockName!
     }
@@ -30,7 +32,7 @@ struct yahooPuller{
         
         var lastPrice:String?
         
-        let URLstring = completeYahooURL(yahoosymbol, "l1")//.. "l1" last price
+        let URLstring = completeYahooURL(yahoosymbol, "b")//.. "l1" last price b is bid
         lastPrice = downloadDataWithURL(yahoourlstring: URLstring)
         
         
@@ -47,6 +49,7 @@ struct yahooPuller{
         
         let yahooURLstring =  "http://download.finance.yahoo.com/d/quotes.csv?s=\(symbol)&f=\(value)"
         //"http://download.finance.yahoo.com/d/quotes.csv?s=AAPL&f=n"
+         //"http://download.finance.yahoo.com/d/quotes.csv?s=USDEUR=AAPL&f=n"
         return yahooURLstring
     }
     
@@ -76,6 +79,42 @@ struct yahooPuller{
         processedStringData = dataFromURL.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
         
         return processedStringData ?? dataFromURL
+    }
+    
+    //http://download.finance.yahoo.com/d/quotes.csv?s=USDEUR=X&f=l1
+    
+    
+    func getExchangeRates (priceInDollar: String)->String
+        
+    {print(#function, #line)
+        
+       let exchangeString = "http://download.finance.yahoo.com/d/quotes.csv?s=USDEUR=X&f=l1"
+        var exchangeStringValue = ""
+        
+        if let url = URL(string: exchangeString) {
+            do{ exchangeStringValue = try NSString(contentsOf: url, usedEncoding: nil) as String}
+            catch let error as NSError{
+                
+                print("Error: \(error)",#line)
+                print("func getExchangeRates: -contents could not be loaded")
+                
+            }
+            
+        } else {
+            
+            print("func getExchangeRates: -the URL was bad!")
+            
+        }
+        //FIXME: remove n🤡
+        //priceInDollar = priceInDollar.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
+        var neuerPreis = priceInDollar.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
+        
+        exchangeStringValue = exchangeStringValue.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
+        
+        
+        var priceInEuro = String(Double(exchangeStringValue)!*Double(neuerPreis)!)
+        print("priceInEuro: \(priceInEuro)")
+        return priceInEuro
     }
     
 }

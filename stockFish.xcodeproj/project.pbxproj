@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C45900751F6DDEA50098EE09 /* stockStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = C45900741F6DDEA50098EE09 /* stockStructure.swift */; };
 		C48ECA731F616DF7000C4AEF /* stockFish_timeline.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C48ECA721F616DF7000C4AEF /* stockFish_timeline.rtf */; };
 		C4EBB8761F61274D00BD0E5D /* yahooSymbols.csv in Resources */ = {isa = PBXBuildFile; fileRef = C4EBB8751F61274D00BD0E5D /* yahooSymbols.csv */; };
 		C4FBCB331F5FC7D000148BCC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */; };
@@ -37,7 +38,21 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		C4D8ABEE1F6719E30034657D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		C45900741F6DDEA50098EE09 /* stockStructure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stockStructure.swift; sourceTree = "<group>"; };
 		C48ECA721F616DF7000C4AEF /* stockFish_timeline.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = stockFish_timeline.rtf; path = stockFish/stockFish_timeline.rtf; sourceTree = "<group>"; };
 		C4EBB8751F61274D00BD0E5D /* yahooSymbols.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = yahooSymbols.csv; sourceTree = "<group>"; };
 		C4FBCB2F1F5FC7D000148BCC /* stockFish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = stockFish.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -144,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				C4D85CB31F654BFB00460F22 /* New Group */,
+				C45900741F6DDEA50098EE09 /* stockStructure.swift */,
 				C4EBB8751F61274D00BD0E5D /* yahooSymbols.csv */,
 				C4FBCB361F5FC7D000148BCC /* stockFish.xcdatamodeld */,
 				C4FBCB321F5FC7D000148BCC /* AppDelegate.swift */,
@@ -195,6 +211,7 @@
 				C4FBCB2B1F5FC7D000148BCC /* Sources */,
 				C4FBCB2C1F5FC7D000148BCC /* Frameworks */,
 				C4FBCB2D1F5FC7D000148BCC /* Resources */,
+				C4D8ABEE1F6719E30034657D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -327,6 +344,7 @@
 				C4FBCB381F5FC7D000148BCC /* stockFish.xcdatamodeld in Sources */,
 				C4FBCB331F5FC7D000148BCC /* AppDelegate.swift in Sources */,
 				C4FBCB691F60078200148BCC /* yahooStockPuller.swift in Sources */,
+				C45900751F6DDEA50098EE09 /* stockStructure.swift in Sources */,
 				C4FBCB641F5FEAE800148BCC /* stockBrain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

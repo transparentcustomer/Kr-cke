@@ -13,8 +13,18 @@ class stockFishController: NSViewController {
     @IBOutlet weak var stockTableView: NSTableView!
     @IBOutlet weak var stockCode: NSTextField!
     @IBOutlet weak var progress: NSProgressIndicator!
+    @IBOutlet weak var myMoney: NSTextField!
+    @IBOutlet weak var numberOffStocks: NSTextField!
+    
     
     var brain = stockBrain()
+    
+    
+    var insertedYahooSymbol: String?
+    var insertedYahooSymbolNumber = "no Number given"
+    var structure = stockStruct()
+   
+
     
     var stockTableViewData = [[String:String]](){
         didSet{
@@ -25,52 +35,90 @@ class stockFishController: NSViewController {
     
     //MARK: - Actions
     @IBAction func update(_ sender: NSButton) {
-        //FIXME: progess indcator broken
         
-        progress.isHidden = false
-        progress.startAnimation(nil)
-       
-
-        stockTableViewData = brain.getUpdates()
+        print("I have \(myMoney.stringValue) bucks")
         
+        if brain.automaticUpdate == false
+        {
+            //FIXME: progess indcator broken
+            
+            progress.isHidden = false
+            progress.startAnimation(nil)
+            
+            
+            stockTableViewData = brain.getUpdates()
+            
+            
+            progress.stopAnimation(nil)
+            progress.isHidden = true
+            print("automatic update is off")
+            updateUI()
+        }else if brain.automaticUpdate == true
+        {
+            //FIXME: progess indcator broken
+            
+            progress.isHidden = false
+            progress.startAnimation(nil)
+            
+            
+            stockTableViewData = brain.getUpdates()
+            
+            
+            progress.stopAnimation(nil)
+            progress.isHidden = true
+            print("automatic update is on")
+            updateUI()
+            
+        }
         
-        progress.stopAnimation(nil)
-        progress.isHidden = true
-        
-        updateUI()
         
     }
+    
+    @IBAction func updateOnOff(_ sender: NSButton)
+    {
+        
+        if sender.state == NSOnState
+        {
+            
+            brain.automaticUpdate = true
+            
+        }else if sender.state == NSOffState
+        {
+            
+            brain.automaticUpdate = false
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
     @IBAction func addStock(_ sender: NSButton)
     {
         //FIXME: CLEANUP the MESS
         
         var symbolArray = brain.useCSV()
         
-        print("symbolArray.count: \(symbolArray.count)")
-//        let restrictedSymbolArray = symbolArray[0..<20].reversed()
-      
-        let restrictedSymbolArray = symbolArray[27600...symbolArray.count-1].reversed()
-//        let restrictedSymbolArray = symbolArray[0...10].reversed()
+        let restrictedSymbolArray = symbolArray[27300...symbolArray.count-1].reversed()
+        
         //.. tot 27607
-        //start form 16000
-        
-
         
         
-        //MARK: automatic insertion
         //FIXME: DispatchQueue - corretly placed and efficient???
         
-        
+        //MARK: 🍩 automatic insertion
         if stockCode.stringValue == "test"
         {
             stockCode.stringValue.removeAll()
             
             let symbolArray = restrictedSymbolArray
-
+            
             
             for symbol in symbolArray
             {
-                stockTableViewData = brain.fillStockArray(symbol)
+                stockTableViewData = brain.fillStockArray(symbol, insertedYahooSymbolNumber)
             }
             
             var symbolArrayString = ""
@@ -85,14 +133,14 @@ class stockFishController: NSViewController {
                     symbolArrayString = symbolArrayString+","+symbol
                 }
             }
-
+            
             
             print("symbolArrayString: \(String(describing: symbolArrayString))")
             
             let multiLastPriceURLstring = "http://download.finance.yahoo.com/d/quotes.csv?s=\(symbolArrayString)&f=n,l1"
             print("multiLastPriceURLstring: \(multiLastPriceURLstring)")
             //"http://download.finance.yahoo.com/d/quotes.csv?s=AAPL,ABC,MMM&f=n,l1"
-
+            
             var dataFromURL: String?
             
             let yahooURL = URL(string: multiLastPriceURLstring)
@@ -123,7 +171,7 @@ class stockFishController: NSViewController {
                 
                 
                 theName = theName.replacingOccurrences(of: "\"", with: "", options: .regularExpression)
-
+                
                 
                 stockTableViewData[indexArray].updateValue(theName, forKey: "name")
                 stockTableViewData[indexArray].updateValue(theLastPrice, forKey: "lastprice")
@@ -146,7 +194,7 @@ class stockFishController: NSViewController {
                     for symbol  in  restrictedSymbolArray
                     {
                         let insertedYahooSymbol = symbol
-                        self.stockTableViewData = (self.brain.fillStockArray(insertedYahooSymbol))
+                        self.stockTableViewData = (self.brain.fillStockArray(insertedYahooSymbol, self.insertedYahooSymbolNumber))
                         
                         
                     }
@@ -156,11 +204,19 @@ class stockFishController: NSViewController {
             }
             
         }else if !stockCode.stringValue.isEmpty
-        {//MARK: 🔥 serperate insertion
+        {//MARK: 🍩  serperate insertion
             
-            let insertedYahooSymbol = stockCode.stringValue
-            stockTableViewData = (brain.fillStockArray(insertedYahooSymbol))
-           
+            insertedYahooSymbol         = stockCode.stringValue
+            
+            if numberOffStocks.stringValue != ""{
+                insertedYahooSymbolNumber   = numberOffStocks.stringValue
+            }else{
+                insertedYahooSymbolNumber   = "no number"
+            }
+            
+            
+            stockTableViewData = (brain.fillStockArray(insertedYahooSymbol!, insertedYahooSymbolNumber))
+            
             
             
         }
@@ -192,7 +248,7 @@ class stockFishController: NSViewController {
         brain.searchCSVforBrokenSymbols()
         updateUI()
     }
- 
+    
     func updateUI(){
         
         stockTableView.reloadData()
@@ -212,6 +268,8 @@ class stockFishController: NSViewController {
     
 }
 
+
+
 //MARK: - TableViewFunctions:
 extension stockFishController:NSTableViewDataSource, NSTableViewDelegate{
     
@@ -225,6 +283,36 @@ extension stockFishController:NSTableViewDataSource, NSTableViewDelegate{
         var result:NSTableCellView
         result  = stockTableView.make(withIdentifier: (tableColumn?.identifier)!, owner: self) as! NSTableCellView
         result.textField?.stringValue = stockTableViewData[row][(tableColumn?.identifier)!]!
+        
+        
+        let newTextColor = NSColor.red
+        
+        if tableColumn?.identifier == "code"{
+            result.textField?.textColor = newTextColor
+        }
+        if tableColumn?.identifier == "change"{
+            
+            //result.textField?.textColor = structure.newTextColor
+            print("structure.newTextColor- change: \(structure.newTextColor)")
+            
+           print("magic number: \(brain.win)")
+            
+            if Double(brain.win) < 0 {
+                result.textField?.textColor = NSColor.red
+                print("red")
+            }else if Double(brain.win) > 0{
+                result.textField?.textColor = NSColor.green
+                print("green")
+            }
+
+            
+            
+            
+            
+        }
+        
+        print("tableView function")
+        
         return result
     }
     

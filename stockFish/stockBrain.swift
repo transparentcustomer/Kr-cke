@@ -14,20 +14,33 @@ struct stockBrain
 {
     
     var stockPuller = yahooPuller()
+    var structure = stockStruct()
+    
+    var win: Double = 0
     
     private var yahooSymbol:    String?
+    var moneySpendForStock:Double = 0
     
     var yahooStockDataArray =   [[String:String]]()
     
     //MARK: - filling of model with symbols
-    mutating func fillStockArray(_ stockCode: String) -> [[String:String]]
+    mutating func fillStockArray(_ stockCode: String,_ stockNumber: String ) -> [[String:String]]
     {
+        
+        var insertedArrayInfo = [String:String]()
         
         yahooStockDataArray.insert(
             [
                 "code"      : stockCode,
                 "name"      : "no info",
-                "lastprice" : "no info"
+                "lastprice" : "no info",
+                
+                //"pricepaid" : "133.85",
+                "pricepaid" : "134.85",
+                "number"    : stockNumber,
+                "win"       : "0",
+                "change"    : "no info"
+                
                 
             ], at: 0)
         
@@ -57,6 +70,8 @@ struct stockBrain
     }
     
     //MARK: - get Yahoo Info:
+    
+    var automaticUpdate = false
     mutating func getUpdates() -> ([[String : String]])
     { //.. to get stock names and price values
         
@@ -71,20 +86,60 @@ struct stockBrain
             var stockLastPrice  :String?
             
             
-           
             
             
-            //MARK: get the name
+            
+            //MARK: 🔫 get the name
             if item["name"] == "no info"
             {
                 
                 print("shitshitshit\(item)")
                 
                 stockName       =  stockPuller.getStockName(yahoosymbol: symbol)
-                stockLastPrice  =  stockPuller.getLastPrice(yahoosymbol: symbol)
+                
+                stockLastPrice  = stockPuller.getExchangeRates(priceInDollar: (stockPuller.getLastPrice(yahoosymbol: symbol)))
+                //stockLastPrice  =  stockPuller.getLastPrice(yahoosymbol: symbol)
+                
+                var blabla = stockPuller.getExchangeRates(priceInDollar: stockLastPrice!)
+                print("blabla Euro: \(blabla)")
                 
                 yahooStockDataArray[index].updateValue(stockName!,      forKey: "name")
                 yahooStockDataArray[index].updateValue(stockLastPrice!, forKey: "lastprice")
+                //                var win = Double(stockLastPrice!)
+                //FIXME: 🔫 CRASH - cannot properly convert into double
+                print("00: \(String(describing: (yahooStockDataArray[index])["lastprice"]))")
+                print("01: \(String(describing: (yahooStockDataArray[index])["pricepaid"]))")
+                
+                var lastpriceResult = (yahooStockDataArray[index])["lastprice"]
+                var pricepaidResult = (yahooStockDataArray[index])["pricepaid"]
+                
+                print("K-Wurst: \(String(describing: (yahooStockDataArray[index])["lastprice"])))")
+                print("K-Wurst02: \(structure.removeCharacters(String(describing: (yahooStockDataArray[index])["lastprice"])))")
+                
+                print("\(Double("5.5")!*4))")
+                var test02 = (Double(lastpriceResult!)!*4)-500
+                
+                print(test02)
+                
+                
+                
+                
+                
+                
+                win = Double(lastpriceResult!)!-Double(pricepaidResult!)!
+                print("win: \(win)")
+                yahooStockDataArray[index].updateValue(String(win), forKey: "change")
+                
+                
+               structure.newTextColor = structure.changeChangeColor(String(win))
+                
+                print("indexblbbls: \(String(describing: (yahooStockDataArray[index])["name"]))")
+                
+                print("lastprice: \(String(describing: (yahooStockDataArray[index])["lastprice"]))")
+                print("lastprice: \(String(describing: item["lastprice"]))")
+                print("pricepaid: \(String(describing: item["pricepaid"]))")
+                
+                
                 
                 print("\(yahooStockDataArray.count-index-1) operations remain")
             }
@@ -140,7 +195,7 @@ struct stockBrain
         repairedSymbList = repairedSymbList.reversed()
         for item in brokenSymbList
         {
-         print(item)
+            print(item)
         }
         print("")
         print("repairedSymbList: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")

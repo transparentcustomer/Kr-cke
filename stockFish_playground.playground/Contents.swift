@@ -3,6 +3,7 @@
 import Cocoa
 
 
+
 let file: FileHandle? = FileHandle(forWritingAtPath: "output.txt")
 
 if file != nil {
@@ -17,4 +18,19 @@ if file != nil {
 }
 else {
     print("Ooops! Something went wrong!")
+}
+
+
+var someValue = "133.85"
+
+Double(someValue)!*5
+
+let str = "$4,102.33"
+
+let formatter = NumberFormatter()
+formatter.numberStyle = .currency
+
+if let number = formatter.number(from: str) {
+    let amount = number.decimalValue
+    print(amount)
 }
