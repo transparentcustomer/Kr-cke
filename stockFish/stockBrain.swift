@@ -66,7 +66,8 @@ struct stockBrain
     
     //MARK: - get Yahoo Info:
     
-    var automateUpdate = false
+    var automateUpdateTurnedOn = false
+
     mutating func getUpdates() -> ([[String : String]])
     { //.. to get stock names and price values
         

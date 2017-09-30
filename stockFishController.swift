@@ -11,7 +11,8 @@ import Cocoa
 class stockFishController: NSViewController {
     
     @IBOutlet weak var stockTableView: NSTableView!
-    @IBOutlet weak var stockCode: NSTextField!
+    
+    @IBOutlet weak var yahooSymbol: NSTextField!
     @IBOutlet weak var progress: NSProgressIndicator!
     @IBOutlet weak var myMoney: NSTextField!
     @IBOutlet weak var numberOffStocks: NSTextField!
@@ -30,70 +31,42 @@ class stockFishController: NSViewController {
     
     var yahooDataArray = [[String:String]](){
         didSet{
-            
             updateUI() //.. every time the model (data) changes - the view get reloaded
         }
     }
     
     //MARK: - Actions
-    @IBAction func update(_ sender: NSButton) {
+    fileprivate func executeUpdate() {
         
-        print("I have \(myMoney.stringValue) bucks")
+        progress.isHidden = false
+        progress.startAnimation(nil)
+        yahooDataArray = brain.getUpdates()
+        progress.stopAnimation(nil)
+        progress.isHidden = true
+        updateUI()
         
-        if brain.automateUpdate == false
-        {
-            //FIXME: progess indcator broken
-            
-            progress.isHidden = false
-            progress.startAnimation(nil)
-            
-            yahooDataArray = brain.getUpdates()
-            
-            progress.stopAnimation(nil)
-            progress.isHidden = true
+        brain.automateUpdateTurnedOn ?
+            print("automatic update is on") :
             print("automatic update is off")
-            updateUI()
-        }else if brain.automateUpdate == true
-        {
-            //FIXME: progess indcator broken
-            
-            progress.isHidden = false
-            progress.startAnimation(nil)
-            
-            yahooDataArray = brain.getUpdates()
-            
-            progress.stopAnimation(nil)
-            progress.isHidden = true
-            print("automatic update is on")
-            updateUI()
-            
-        }
-        
-        
     }
+    
+    @IBAction func update(_ sender: NSButton) {executeUpdate()}
     
     //.. func to automate the update with time interval
     @IBAction func updateOnOff(_ sender: NSButton)
     {
-        
-        if sender.state == NSControl.StateValue.on
-        {
-            brain.automateUpdate = true
-            
-        }else if sender.state == NSControl.StateValue.off
-        {
-            brain.automateUpdate = false
-        }
+        let buttonTurnedOn = sender.state == NSControl.StateValue.on
+        buttonTurnedOn ? (brain.automateUpdateTurnedOn = true) : (brain.automateUpdateTurnedOn = false)
     }
 
-    
     @IBAction func addStock(_ sender: NSButton)
     {
         //FIXME: CLEANUP the MESS
         
+//        let insertedYahooSymbol =
+        
         var symbolArray = brain.extractStockSymbolsFromCSV()
         
-                
         if pricePaid.stringValue != "" {
             pricepaid = pricePaid.stringValue
         }else{
@@ -111,19 +84,19 @@ class stockFishController: NSViewController {
         //MARK: 🍩 automatic insertion
         
         
-        if !stockCode.stringValue.isEmpty //MARK: 🍩  serperate insertion
+        if !yahooSymbol.stringValue.isEmpty //MARK: 🍩  serperate insertion
         {
             
-            insertedYahooSymbol = stockCode.stringValue
+            insertedYahooSymbol = yahooSymbol.stringValue
             
             if numberOffStocks.stringValue != ""{insertedYahooSymbolNumber = numberOffStocks.stringValue
             }else{ insertedYahooSymbolNumber   = "no number"}
             
             yahooDataArray = (brain.fillYahooDataArray(insertedYahooSymbol!, stockNumber: insertedYahooSymbolNumber, pricepaid: pricepaid!))
             print("🔮\(yahooDataArray)")
-        }else if stockCode.stringValue == "test"
+        }else if yahooSymbol.stringValue == "test"
         {
-            stockCode.stringValue.removeAll()
+            yahooSymbol.stringValue.removeAll()
             
             let symbolArray = restrictedSymbolArray
             
@@ -201,7 +174,7 @@ class stockFishController: NSViewController {
             print("number of names: \(restrictedSymbolArray.count)")
             print("number of prices: \(restrictedSymbolArray.count)")
             
-        }else if self.stockCode.stringValue.isEmpty
+        }else if self.yahooSymbol.stringValue.isEmpty
         {
             DispatchQueue.main.async
                 { [unowned self] in
@@ -222,7 +195,7 @@ class stockFishController: NSViewController {
         
         yahooDataArray.removeAll()
         brain.yahooStockDataArray.removeAll()
-        stockCode.stringValue.removeAll()
+        yahooSymbol.stringValue.removeAll()
         updateUI()
     }
     
@@ -276,11 +249,7 @@ extension stockFishController:NSTableViewDataSource, NSTableViewDelegate
 {
 
     func numberOfRows(in stockTableView: NSTableView) -> Int {
-        
-        
-        print("yahooDataArray.count\(yahooDataArray.count)")
 
-        
         return yahooDataArray.count
         
     }
