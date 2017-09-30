@@ -15,6 +15,7 @@ class stockFishController: NSViewController {
     @IBOutlet weak var progress: NSProgressIndicator!
     @IBOutlet weak var myMoney: NSTextField!
     @IBOutlet weak var numberOffStocks: NSTextField!
+    @IBOutlet weak var pricePaid: NSTextField!
     
     
     var brain = stockBrain()
@@ -24,9 +25,10 @@ class stockFishController: NSViewController {
     var insertedYahooSymbolNumber = "no Number given"
     var structure = stockStruct()
    
+    var pricepaid: String?
 
     
-    var stockTableViewData = [[String:String]](){
+    var yahooDataArray = [[String:String]](){
         didSet{
             
             updateUI() //.. every time the model (data) changes - the view get reloaded
@@ -38,31 +40,27 @@ class stockFishController: NSViewController {
         
         print("I have \(myMoney.stringValue) bucks")
         
-        if brain.automaticUpdate == false
+        if brain.automateUpdate == false
         {
             //FIXME: progess indcator broken
             
             progress.isHidden = false
             progress.startAnimation(nil)
             
-            
-            stockTableViewData = brain.getUpdates()
-            
+            yahooDataArray = brain.getUpdates()
             
             progress.stopAnimation(nil)
             progress.isHidden = true
             print("automatic update is off")
             updateUI()
-        }else if brain.automaticUpdate == true
+        }else if brain.automateUpdate == true
         {
             //FIXME: progess indcator broken
             
             progress.isHidden = false
             progress.startAnimation(nil)
             
-            
-            stockTableViewData = brain.getUpdates()
-            
+            yahooDataArray = brain.getUpdates()
             
             progress.stopAnimation(nil)
             progress.isHidden = true
@@ -74,32 +72,34 @@ class stockFishController: NSViewController {
         
     }
     
+    //.. func to automate the update with time interval
     @IBAction func updateOnOff(_ sender: NSButton)
     {
         
-        if sender.state == NSOnState
+        if sender.state == NSControl.StateValue.on
         {
+            brain.automateUpdate = true
             
-            brain.automaticUpdate = true
-            
-        }else if sender.state == NSOffState
+        }else if sender.state == NSControl.StateValue.off
         {
-            
-            brain.automaticUpdate = false
+            brain.automateUpdate = false
         }
-        
     }
-    
-    
-    
-    
-    
+
     
     @IBAction func addStock(_ sender: NSButton)
     {
         //FIXME: CLEANUP the MESS
         
-        var symbolArray = brain.useCSV()
+        var symbolArray = brain.extractStockSymbolsFromCSV()
+        
+                
+        if pricePaid.stringValue != "" {
+            pricepaid = pricePaid.stringValue
+        }else{
+            pricepaid = "no info"
+        }
+        
         
         let restrictedSymbolArray = symbolArray[27300...symbolArray.count-1].reversed()
         
@@ -109,7 +109,19 @@ class stockFishController: NSViewController {
         //FIXME: DispatchQueue - corretly placed and efficient???
         
         //MARK: 🍩 automatic insertion
-        if stockCode.stringValue == "test"
+        
+        
+        if !stockCode.stringValue.isEmpty //MARK: 🍩  serperate insertion
+        {
+            
+            insertedYahooSymbol = stockCode.stringValue
+            
+            if numberOffStocks.stringValue != ""{insertedYahooSymbolNumber = numberOffStocks.stringValue
+            }else{ insertedYahooSymbolNumber   = "no number"}
+            
+            yahooDataArray = (brain.fillYahooDataArray(insertedYahooSymbol!, stockNumber: insertedYahooSymbolNumber, pricepaid: pricepaid!))
+            print("🔮\(yahooDataArray)")
+        }else if stockCode.stringValue == "test"
         {
             stockCode.stringValue.removeAll()
             
@@ -118,7 +130,8 @@ class stockFishController: NSViewController {
             
             for symbol in symbolArray
             {
-                stockTableViewData = brain.fillStockArray(symbol, insertedYahooSymbolNumber)
+                
+                yahooDataArray = brain.fillYahooDataArray(symbol, stockNumber: insertedYahooSymbolNumber, pricepaid: pricepaid!)
             }
             
             var symbolArrayString = ""
@@ -152,7 +165,9 @@ class stockFishController: NSViewController {
             var dataFromURLasArray = dataFromURL?.components(separatedBy: "\n")
             
             //MARK: process the data
-            dataFromURLasArray?.remove(at: (dataFromURLasArray?.count)!-1)
+            
+            
+            //dataFromURLasArray?.remove(at: (dataFromURLasArray?.count)!-1)
             
             
             //seperateStockInfo
@@ -173,8 +188,8 @@ class stockFishController: NSViewController {
                 theName = theName.replacingOccurrences(of: "\"", with: "", options: .regularExpression)
                 
                 
-                stockTableViewData[indexArray].updateValue(theName, forKey: "name")
-                stockTableViewData[indexArray].updateValue(theLastPrice, forKey: "lastprice")
+                yahooDataArray[indexArray].updateValue(theName, forKey: "name")
+                yahooDataArray[indexArray].updateValue(theLastPrice, forKey: "lastprice")
                 
                 print("restrictedSymbolArray: \(restrictedSymbolArray)")
                 
@@ -193,38 +208,19 @@ class stockFishController: NSViewController {
                     
                     for symbol  in  restrictedSymbolArray
                     {
-                        let insertedYahooSymbol = symbol
-                        self.stockTableViewData = (self.brain.fillStockArray(insertedYahooSymbol, self.insertedYahooSymbolNumber))
-                        
-                        
+                        self.insertedYahooSymbol = symbol
+                        self.yahooDataArray = (self.brain.fillYahooDataArray(self.insertedYahooSymbol!, stockNumber: self.insertedYahooSymbolNumber, pricepaid: self.pricepaid!))
+                    
                     }
-                    
-                    
-                    
+    
             }
-            
-        }else if !stockCode.stringValue.isEmpty
-        {//MARK: 🍩  serperate insertion
-            
-            insertedYahooSymbol         = stockCode.stringValue
-            
-            if numberOffStocks.stringValue != ""{
-                insertedYahooSymbolNumber   = numberOffStocks.stringValue
-            }else{
-                insertedYahooSymbolNumber   = "no number"
-            }
-            
-            
-            stockTableViewData = (brain.fillStockArray(insertedYahooSymbol!, insertedYahooSymbolNumber))
-            
-            
             
         }
     }
     
     @IBAction func clearTable(_ sender: NSButton) {
         
-        stockTableViewData.removeAll()
+        yahooDataArray.removeAll()
         brain.yahooStockDataArray.removeAll()
         stockCode.stringValue.removeAll()
         updateUI()
@@ -235,7 +231,7 @@ class stockFishController: NSViewController {
         
         if stockTableView.isRowSelected(stockTableView.selectedRow)
         {
-            stockTableViewData.remove(at: stockTableView.selectedRow)
+            yahooDataArray.remove(at: stockTableView.selectedRow)
             updateUI()
         }
         
@@ -271,50 +267,77 @@ class stockFishController: NSViewController {
 
 
 //MARK: - TableViewFunctions:
-extension stockFishController:NSTableViewDataSource, NSTableViewDelegate{
-    
+
+
+
+
+
+extension stockFishController:NSTableViewDataSource, NSTableViewDelegate
+{
+
     func numberOfRows(in stockTableView: NSTableView) -> Int {
-        return stockTableViewData.count
+        
+        
+        print("yahooDataArray.count\(yahooDataArray.count)")
+
+        
+        return yahooDataArray.count
+        
     }
+
+    
     
     func tableView(_ stockTableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView?{
+
+        print("😭😭😭")
+        var cellInStockTableView:NSTableCellView
         
-        
-        var result:NSTableCellView
-        result  = stockTableView.make(withIdentifier: (tableColumn?.identifier)!, owner: self) as! NSTableCellView
-        result.textField?.stringValue = stockTableViewData[row][(tableColumn?.identifier)!]!
-        
-        
-        let newTextColor = NSColor.red
-        
-        if tableColumn?.identifier == "code"{
-            result.textField?.textColor = newTextColor
+        cellInStockTableView  = stockTableView.makeView(withIdentifier: (tableColumn?.identifier)!, owner: self) as! NSTableCellView
+
+        var reihe = yahooDataArray[row]
+        print("reihe\(reihe[(tableColumn?.identifier.rawValue)!])")
+        //FIXME: 👾
+//        cellInStockTableView.textField?.stringValue = yahooDataArray[row][(tableColumn?.identifier)!]!
+        cellInStockTableView.textField?.stringValue = yahooDataArray[row][(tableColumn?.identifier.rawValue)!]!
+
+
+        let setRedAsTextColor = NSColor.red
+
+        if (tableColumn?.identifier)!.rawValue == "code"{
+            cellInStockTableView.textField?.textColor = setRedAsTextColor
+
+            print("👺\(cellInStockTableView.textField?.stringValue)")
+
         }
-        if tableColumn?.identifier == "change"{
-            
+        if (tableColumn?.identifier)!.rawValue == "change"{
+
             //result.textField?.textColor = structure.newTextColor
             print("structure.newTextColor- change: \(structure.newTextColor)")
-            
+
            print("magic number: \(brain.win)")
-            
+
             if Double(brain.win) < 0 {
-                result.textField?.textColor = NSColor.red
+                cellInStockTableView.textField?.textColor = NSColor.red
                 print("red")
             }else if Double(brain.win) > 0{
-                result.textField?.textColor = NSColor.green
+                cellInStockTableView.textField?.textColor = NSColor.green
                 print("green")
+            }else{
+                print("andereFarbe")
             }
 
-            
-            
-            
-            
+
+
+
+
         }
-        
+
         print("tableView function")
+
         
-        return result
+        return cellInStockTableView
     }
-    
+
 }
+
 

@@ -26,7 +26,7 @@ class stockStruct {
     
     func changeChangeColor(_ changevalue: String)->NSColor{
         print("changeChangeColor")
-        var changeWert = Double(changevalue)!
+        let changeWert = Double(changevalue)!
         
         if changeWert > 0{
             newTextColor = NSColor.red
@@ -38,5 +38,16 @@ class stockStruct {
         }
         return newTextColor
     }
+    
+    
+    func round2(valueToRoundOnTwoDecimals value: Double)->String
+    {print(#function, #line)
+        
+        let roundedValue = String(format: "%.2f", value)
+        
+        return roundedValue
+    }
+    
+    
     
 }

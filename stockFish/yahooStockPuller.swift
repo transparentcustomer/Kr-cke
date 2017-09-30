@@ -11,9 +11,12 @@ import Foundation
 
 struct yahooPuller{
     
+    var structure = stockStruct()
+    
+    
     
         
-    func getStockName(yahoosymbol: String) -> String{
+    func getStockNameFromYahoo(yahoosymbol: String) -> String{
         
         var stockName:String?
         
@@ -28,6 +31,9 @@ struct yahooPuller{
         return stockName!
     }
     
+   
+    
+    
     func getLastPrice(yahoosymbol: String) -> String {
         
         var lastPrice:String?
@@ -40,6 +46,13 @@ struct yahooPuller{
         
     }
     
+    func getPriceToPay (yahoosymbol: String)-> String{
+        var pricetopay: String?
+        
+        let URLstring = completeYahooURL(yahoosymbol, "l1")//.. "l1" last price b is bid
+        pricetopay = downloadDataWithURL(yahoourlstring: URLstring)
+        return pricetopay!
+    }
     
     //MARK: format yahoo link
     func completeYahooURL (_ symbol: String,_ value: String)->String
@@ -105,16 +118,28 @@ struct yahooPuller{
             print("func getExchangeRates: -the URL was bad!")
             
         }
-        //FIXME: remove n🤡
-        //priceInDollar = priceInDollar.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
-        var neuerPreis = priceInDollar.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
         
-        exchangeStringValue = exchangeStringValue.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
+        let neuerPreis = structure.removeCharacters(priceInDollar)
+//        var neuerPreis = priceInDollar.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
+        exchangeStringValue = structure.removeCharacters(exchangeStringValue)
+//        exchangeStringValue = exchangeStringValue.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
         
         
-        var priceInEuro = String(Double(exchangeStringValue)!*Double(neuerPreis)!)
-        print("priceInEuro: \(priceInEuro)")
-        return priceInEuro
+        
+     
+        
+        var priceInEuro: String?
+        
+        priceInEuro = String(Double(exchangeStringValue)!*Double(neuerPreis)!)
+        
+        if priceInEuro != nil {
+            
+        }else{
+            priceInEuro = "no value available"
+        }
+        
+        print("priceInEuro: \(String(describing: priceInEuro))")
+        return priceInEuro!
     }
     
 }

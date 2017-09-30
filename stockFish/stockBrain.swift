@@ -12,7 +12,7 @@ let yahooSymbolPLIST = Bundle.main.path(forResource: "symbolData", ofType: "plis
 
 struct stockBrain
 {
-    
+ 
     var stockPuller = yahooPuller()
     var structure = stockStruct()
     
@@ -24,125 +24,123 @@ struct stockBrain
     var yahooStockDataArray =   [[String:String]]()
     
     //MARK: - filling of model with symbols
-    mutating func fillStockArray(_ stockCode: String,_ stockNumber: String ) -> [[String:String]]
+    mutating func fillYahooDataArray(_ yahoosymbol: String, stockNumber: String,pricepaid: String ) -> [[String:String]]
     {
-        
-        var insertedArrayInfo = [String:String]()
         
         yahooStockDataArray.insert(
             [
-                "code"      : stockCode,
+                "code"      : yahoosymbol,
                 "name"      : "no info",
                 "lastprice" : "no info",
                 
-                //"pricepaid" : "133.85",
-                "pricepaid" : "134.85",
+                "pricepaid" : pricepaid,
                 "number"    : stockNumber,
                 "win"       : "0",
                 "change"    : "no info"
-                
                 
             ], at: 0)
         
         return yahooStockDataArray
     }
     
-    func useCSV()-> Array<String>
+    func extractStockSymbolsFromCSV()-> Array<String>
     {
         //FIXME: CLEANUP the MESS
-        var yahooSymbols : [String] = []
+        var yahooSymbolArray : [String] = []
         do {
             
             if let path = Bundle.main.path(forResource: "yahooSymbols", ofType: "csv")
             {
                 //.. STORE CONTENT OF FILE IN VARIABLE:
                 let data = try String(contentsOfFile:path, encoding: String.Encoding.utf8)
-                
-                yahooSymbols = data.components(separatedBy: "\r") //.. removal of return commands from String
-                
+                yahooSymbolArray = data.components(separatedBy: "\r") //.. removal of return commands from String
             }
+            
         } catch let err as NSError {
-            // do something with Error}
+            // do something with Error
             print(err)
             print("there is an error in processing the CSV file")
         }
-        return yahooSymbols
+        return yahooSymbolArray
     }
     
     //MARK: - get Yahoo Info:
     
-    var automaticUpdate = false
+    var automateUpdate = false
     mutating func getUpdates() -> ([[String : String]])
     { //.. to get stock names and price values
         
         
         
+        
+
         for (index,var item) in yahooStockDataArray.enumerated()
         {
-            print("shitshitshit\(item)")
+
             //FIXME: 🔥 .. beware of cycling //.. in the case of no stock belonging to a symbol
             let symbol          = item["code"]!
             var stockName       :String?
             var stockLastPrice  :String?
-            
-            
-            
-            
-            
+            var lastpriceResult :String?
+         
             //MARK: 🔫 get the name
             if item["name"] == "no info"
             {
                 
-                print("shitshitshit\(item)")
-                
-                stockName       =  stockPuller.getStockName(yahoosymbol: symbol)
-                
+                stockName       =  stockPuller.getStockNameFromYahoo(yahoosymbol: symbol)
                 stockLastPrice  = stockPuller.getExchangeRates(priceInDollar: (stockPuller.getLastPrice(yahoosymbol: symbol)))
-                //stockLastPrice  =  stockPuller.getLastPrice(yahoosymbol: symbol)
-                
-                var blabla = stockPuller.getExchangeRates(priceInDollar: stockLastPrice!)
-                print("blabla Euro: \(blabla)")
+                stockLastPrice = String(structure.round2(valueToRoundOnTwoDecimals: Double(stockLastPrice!)!))
                 
                 yahooStockDataArray[index].updateValue(stockName!,      forKey: "name")
                 yahooStockDataArray[index].updateValue(stockLastPrice!, forKey: "lastprice")
-                //                var win = Double(stockLastPrice!)
-                //FIXME: 🔫 CRASH - cannot properly convert into double
-                print("00: \(String(describing: (yahooStockDataArray[index])["lastprice"]))")
-                print("01: \(String(describing: (yahooStockDataArray[index])["pricepaid"]))")
                 
-                var lastpriceResult = (yahooStockDataArray[index])["lastprice"]
+                lastpriceResult = (yahooStockDataArray[index])["lastprice"]
+
+                
+            }
+            
+            if item["pricepaid"] == "no info"
+            {
+               
+                //FIXME: 🦄 needs to be fixed first
+                
+                var pricepaidResult = stockPuller.getPriceToPay(yahoosymbol: symbol)
+                pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult)!))
+                 print("pricepaid == no info 🦄 \(pricepaidResult)")
+                
+                win = (Double(lastpriceResult!)!-Double(pricepaidResult)!)
+                win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
+                
+                let winInPercent = String(structure.round2(valueToRoundOnTwoDecimals: (100*win/Double(pricepaidResult)!)))
+                
+                yahooStockDataArray[index].updateValue("\(String(win)) (\(winInPercent)%)", forKey: "change")
+                
+                
+                yahooStockDataArray[index].updateValue(pricepaidResult, forKey: "pricepaid")
+                structure.newTextColor = structure.changeChangeColor(String(win))
+                
+            }else{
+                print("pricepaid == no info-else")
+                
+                
                 var pricepaidResult = (yahooStockDataArray[index])["pricepaid"]
                 
-                print("K-Wurst: \(String(describing: (yahooStockDataArray[index])["lastprice"])))")
-                print("K-Wurst02: \(structure.removeCharacters(String(describing: (yahooStockDataArray[index])["lastprice"])))")
+                pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult!)!))
+
+                win = (Double(lastpriceResult!)!-Double(pricepaidResult!)!)
+                win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
                 
-                print("\(Double("5.5")!*4))")
-                var test02 = (Double(lastpriceResult!)!*4)-500
-                
-                print(test02)
-                
+                let winInPercent = String(structure.round2(valueToRoundOnTwoDecimals: (100*win/Double(pricepaidResult!)!)))
                 
                 
+                yahooStockDataArray[index].updateValue("\(String(win)) (\(winInPercent)%)", forKey: "change")
                 
                 
-                
-                win = Double(lastpriceResult!)!-Double(pricepaidResult!)!
-                print("win: \(win)")
-                yahooStockDataArray[index].updateValue(String(win), forKey: "change")
-                
-                
-               structure.newTextColor = structure.changeChangeColor(String(win))
-                
-                print("indexblbbls: \(String(describing: (yahooStockDataArray[index])["name"]))")
-                
-                print("lastprice: \(String(describing: (yahooStockDataArray[index])["lastprice"]))")
-                print("lastprice: \(String(describing: item["lastprice"]))")
-                print("pricepaid: \(String(describing: item["pricepaid"]))")
-                
-                
-                
-                print("\(yahooStockDataArray.count-index-1) operations remain")
+                structure.newTextColor = structure.changeChangeColor(String(win))
             }
+            
+            
+            
             
         }
         return yahooStockDataArray
@@ -169,7 +167,7 @@ struct stockBrain
             if item["name"] == "no info"
             {
                 
-                stockName       =  stockPuller.getStockName(yahoosymbol: symbol)
+                stockName       =  stockPuller.getStockNameFromYahoo(yahoosymbol: symbol)
                 
                 yahooStockDataArray[index].updateValue(stockName!,      forKey: "name")
                 
@@ -204,4 +202,73 @@ struct stockBrain
             print(item)
         }
     }
-}
+    
+    //MARK: - structureFunctions
+    //MARK: - implementation calculator funcrions
+    
+//    private enum Operation{
+//        
+//        case stringValue(String)
+////        case constant (Double)
+////        case unaryOperation((Double) -> Double)
+////        case binaryOperation((Double, Double) -> Double)
+////        case equals
+////        case reset
+//        
+//    }
+//    
+//    private var operations: Dictionary<String,Operation> = [
+//        
+//        "code"      : stockCode,
+//        "name"      : "no info",
+//        "lastprice" : "no info",
+//        
+//        "pricepaid" : pricepaid,
+//        "number"    : stockNumber,
+//        "win"       : "0",
+//        "change"    : "no info"
+//        
+//        
+//        
+////        "π": Operation.constant(Double.pi),
+////        "e": Operation.constant(M_E),
+////        "√": Operation.unaryOperation(sqrt),
+////        "cos": Operation.unaryOperation(cos),
+////        "±": Operation.unaryOperation({-$0}),
+////        
+////        "×": Operation.binaryOperation({$0*$1}),
+////        "÷": Operation.binaryOperation({$0/$1}),
+////        "+": Operation.binaryOperation({$0+$1}),
+////        "−": Operation.binaryOperation({$0-$1}),
+////        "x²": Operation.unaryOperation({$0*$0}),
+////        "=": Operation.equals
+//    ]
+//    
+//    mutating func performOperation(_ symbol: String)
+//    {
+//        if let operation = operations[symbol]{
+//            switch operation {
+//            case .constant(let value):
+//                accumulator = value
+//            case .unaryOperation(let function):
+//                if accumulator != nil {
+//                    accumulator =  function(accumulator!)
+//                }
+//            case .binaryOperation(let function):
+//                if accumulator != nil{
+//                    pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!)
+//                    accumulator = nil
+//                }
+//                
+//            case .equals:
+//                performPendingBinaryOperation()
+//            default:
+//                
+//                break
+//            }
+//            
+       }
+//    
+//    }
+//    
+//}
