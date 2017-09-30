@@ -17,6 +17,8 @@ struct stockBrain
     var structure = stockStruct()
     
     var win: Double = 0
+    var pricepaid = ""
+    var yahooSymbolArray : [String] = []
     
     private var yahooSymbol:    String?
     var moneySpendForStock:Double = 0
@@ -43,10 +45,10 @@ struct stockBrain
         return yahooStockDataArray
     }
     
-    func extractStockSymbolsFromCSV()-> Array<String>
+    mutating func extractStockSymbolsFromCSV()-> Array<String>
     {
         //FIXME: CLEANUP the MESS
-        var yahooSymbolArray : [String] = []
+        
         do {
             
             if let path = Bundle.main.path(forResource: "yahooSymbols", ofType: "csv")

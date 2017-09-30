@@ -18,16 +18,17 @@ class stockFishController: NSViewController {
     @IBOutlet weak var numberOffStocks: NSTextField!
     @IBOutlet weak var pricePaid: NSTextField!
     
-    
+    //MARK: - Pointers:
     var brain = stockBrain()
-    
+    var structure = stockStruct()
+    //MARK: - variables:
     
     var insertedYahooSymbol: String?
     var insertedYahooSymbolNumber = "no Number given"
-    var structure = stockStruct()
-   
-    var pricepaid: String?
-
+    
+    
+    //    var pricepaid: String?
+    
     
     var yahooDataArray = [[String:String]](){
         didSet{
@@ -58,41 +59,28 @@ class stockFishController: NSViewController {
         let buttonTurnedOn = sender.state == NSControl.StateValue.on
         buttonTurnedOn ? (brain.automateUpdateTurnedOn = true) : (brain.automateUpdateTurnedOn = false)
     }
-
-    @IBAction func addStock(_ sender: NSButton)
-    {
+    
+    fileprivate func useYahooSymbol() {
         //FIXME: CLEANUP the MESS
         
-//        let insertedYahooSymbol =
-        
         var symbolArray = brain.extractStockSymbolsFromCSV()
+        insertedYahooSymbol = yahooSymbol.stringValue
         
-        if pricePaid.stringValue != "" {
-            pricepaid = pricePaid.stringValue
-        }else{
-            pricepaid = "no info"
-        }
         
+        (pricePaid.stringValue != brain.pricepaid) ? (brain.pricepaid = pricePaid.stringValue):(brain.pricepaid = "no info")
         
         let restrictedSymbolArray = symbolArray[27300...symbolArray.count-1].reversed()
-        
         //.. tot 27607
-        
         
         //FIXME: DispatchQueue - corretly placed and efficient???
         
         //MARK: 🍩 automatic insertion
-        
-        
-        if !yahooSymbol.stringValue.isEmpty //MARK: 🍩  serperate insertion
+        if !(insertedYahooSymbol?.isEmpty)! //MARK: 🍩  serperate insertion
         {
-            
-            insertedYahooSymbol = yahooSymbol.stringValue
-            
             if numberOffStocks.stringValue != ""{insertedYahooSymbolNumber = numberOffStocks.stringValue
             }else{ insertedYahooSymbolNumber   = "no number"}
             
-            yahooDataArray = (brain.fillYahooDataArray(insertedYahooSymbol!, stockNumber: insertedYahooSymbolNumber, pricepaid: pricepaid!))
+            yahooDataArray = (brain.fillYahooDataArray(insertedYahooSymbol!, stockNumber: insertedYahooSymbolNumber, pricepaid: brain.pricepaid))
             print("🔮\(yahooDataArray)")
         }else if yahooSymbol.stringValue == "test"
         {
@@ -104,7 +92,7 @@ class stockFishController: NSViewController {
             for symbol in symbolArray
             {
                 
-                yahooDataArray = brain.fillYahooDataArray(symbol, stockNumber: insertedYahooSymbolNumber, pricepaid: pricepaid!)
+                yahooDataArray = brain.fillYahooDataArray(symbol, stockNumber: insertedYahooSymbolNumber, pricepaid: brain.pricepaid)
             }
             
             var symbolArrayString = ""
@@ -166,8 +154,6 @@ class stockFishController: NSViewController {
                 
                 print("restrictedSymbolArray: \(restrictedSymbolArray)")
                 
-                
-                
             }
             
             print("number of symbols: \(restrictedSymbolArray.count+1)")
@@ -182,13 +168,16 @@ class stockFishController: NSViewController {
                     for symbol  in  restrictedSymbolArray
                     {
                         self.insertedYahooSymbol = symbol
-                        self.yahooDataArray = (self.brain.fillYahooDataArray(self.insertedYahooSymbol!, stockNumber: self.insertedYahooSymbolNumber, pricepaid: self.pricepaid!))
-                    
+                        self.yahooDataArray = (self.brain.fillYahooDataArray(self.insertedYahooSymbol!, stockNumber: self.insertedYahooSymbolNumber, pricepaid: self.brain.pricepaid))
                     }
-    
             }
             
         }
+    }
+    
+    @IBAction func addStock(_ sender: NSButton)
+    {
+        useYahooSymbol()
     }
     
     @IBAction func clearTable(_ sender: NSButton) {
@@ -207,10 +196,7 @@ class stockFishController: NSViewController {
             yahooDataArray.remove(at: stockTableView.selectedRow)
             updateUI()
         }
-        
     }
-    
-    
     
     @IBAction func test(_ sender: NSButton)
     {
@@ -221,7 +207,6 @@ class stockFishController: NSViewController {
     func updateUI(){
         
         stockTableView.reloadData()
-        
     }
     
     //MARK: -
@@ -230,11 +215,7 @@ class stockFishController: NSViewController {
         self.stockTableView.delegate = self
         self.stockTableView.dataSource = self
         self.stockTableView.reloadData()
-        
-        
-        
     }
-    
 }
 
 
@@ -247,44 +228,40 @@ class stockFishController: NSViewController {
 
 extension stockFishController:NSTableViewDataSource, NSTableViewDelegate
 {
-
+    
     func numberOfRows(in stockTableView: NSTableView) -> Int {
-
+        
         return yahooDataArray.count
         
     }
-
+    
     
     
     func tableView(_ stockTableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView?{
-
+        
         print("😭😭😭")
         var cellInStockTableView:NSTableCellView
         
         cellInStockTableView  = stockTableView.makeView(withIdentifier: (tableColumn?.identifier)!, owner: self) as! NSTableCellView
-
-        var reihe = yahooDataArray[row]
-        print("reihe\(reihe[(tableColumn?.identifier.rawValue)!])")
+        
         //FIXME: 👾
-//        cellInStockTableView.textField?.stringValue = yahooDataArray[row][(tableColumn?.identifier)!]!
+        //        cellInStockTableView.textField?.stringValue = yahooDataArray[row][(tableColumn?.identifier)!]!
         cellInStockTableView.textField?.stringValue = yahooDataArray[row][(tableColumn?.identifier.rawValue)!]!
-
-
+        
+        
         let setRedAsTextColor = NSColor.red
-
+        
         if (tableColumn?.identifier)!.rawValue == "code"{
             cellInStockTableView.textField?.textColor = setRedAsTextColor
-
-            print("👺\(cellInStockTableView.textField?.stringValue)")
-
+            
         }
         if (tableColumn?.identifier)!.rawValue == "change"{
-
+            
             //result.textField?.textColor = structure.newTextColor
             print("structure.newTextColor- change: \(structure.newTextColor)")
-
-           print("magic number: \(brain.win)")
-
+            
+            print("magic number: \(brain.win)")
+            
             if Double(brain.win) < 0 {
                 cellInStockTableView.textField?.textColor = NSColor.red
                 print("red")
@@ -294,19 +271,19 @@ extension stockFishController:NSTableViewDataSource, NSTableViewDelegate
             }else{
                 print("andereFarbe")
             }
-
-
-
-
-
+            
+            
+            
+            
+            
         }
-
+        
         print("tableView function")
-
+        
         
         return cellInStockTableView
     }
-
+    
 }
 
 
