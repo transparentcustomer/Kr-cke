@@ -17,13 +17,18 @@ struct stockBrain
     var structure = stockStruct()
     
     var win: Double = 0
-    var pricepaid = ""
+    var pricepaid   = ""
+    var numberToBuy: String?
     var yahooSymbolArray : [String] = []
+    var insertedYahooSymbol: String?
+    
+    var yahooStockDataArray =   [[String:String]]()
+//    var yahooStockArray = [[String:String]]()
     
     private var yahooSymbol:    String?
     var moneySpendForStock:Double = 0
     
-    var yahooStockDataArray =   [[String:String]]()
+    
     
     //MARK: - filling of model with symbols
     mutating func fillYahooDataArray(_ yahoosymbol: String, stockNumber: String,pricepaid: String ) -> [[String:String]]
@@ -66,6 +71,22 @@ struct stockBrain
         return yahooSymbolArray
     }
     
+    //MARK: - add stock to tableView
+    
+    
+    mutating func addStockSeperateInsertion()->[[String:String]]{
+        
+        if !(insertedYahooSymbol?.isEmpty)! //MARK: 🍩  serperate insertion
+        {
+            
+            yahooStockDataArray = (fillYahooDataArray(insertedYahooSymbol!, stockNumber: numberToBuy!, pricepaid: pricepaid))
+            print("🔮\(yahooStockDataArray)")
+        }
+        return yahooStockDataArray
+        
+    }
+    
+    
     //MARK: - get Yahoo Info:
     
     var automateUpdateTurnedOn = false
@@ -91,8 +112,11 @@ struct stockBrain
             {
                 
                 stockName       =  stockPuller.getStockNameFromYahoo(yahoosymbol: symbol)
-                stockLastPrice  = stockPuller.getExchangeRates(priceInDollar: (stockPuller.getLastPrice(yahoosymbol: symbol)))
-                stockLastPrice = String(structure.round2(valueToRoundOnTwoDecimals: Double(stockLastPrice!)!))
+                stockLastPrice  =  stockPuller.getLastPrice(yahoosymbol: symbol)
+                
+//                stockLastPrice  != nil ? stockPuller.getExchangeRates(priceInDollar: (stockPuller.getLastPrice(yahoosymbol: symbol))) : "no info"
+//                stockLastPrice  = stockPuller.getExchangeRates(priceInDollar: (stockPuller.getLastPrice(yahoosymbol: symbol)))
+//                stockLastPrice = String(structure.round2(valueToRoundOnTwoDecimals: Double(stockLastPrice!)!))
                 
                 yahooStockDataArray[index].updateValue(stockName!,      forKey: "name")
                 yahooStockDataArray[index].updateValue(stockLastPrice!, forKey: "lastprice")
@@ -102,7 +126,7 @@ struct stockBrain
                 
             }
             
-            if item["pricepaid"] == "no info"
+            if item["pricepaid"] == "no info" && (lastpriceResult != "N/A")
             {
                
                 //FIXME: 🦄 needs to be fixed first

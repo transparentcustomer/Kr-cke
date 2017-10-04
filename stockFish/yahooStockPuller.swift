@@ -120,17 +120,17 @@ struct yahooPuller{
         }
         
         let neuerPreis = structure.removeCharacters(priceInDollar)
-//        var neuerPreis = priceInDollar.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
         exchangeStringValue = structure.removeCharacters(exchangeStringValue)
-//        exchangeStringValue = exchangeStringValue.replacingOccurrences(of: "\"|\n", with: "", options: .regularExpression)
-        
-        
-        
-     
+    
         
         var priceInEuro: String?
         
-        priceInEuro = String(Double(exchangeStringValue)!*Double(neuerPreis)!)
+//        priceInEuro != nil ? (String(Double(exchangeStringValue)!*Double(neuerPreis)!)) : "no value available"
+        
+        
+        (String(Double(exchangeStringValue)!*Double(neuerPreis)!)) != nil ? priceInEuro : "no value available"
+        
+//        priceInEuro = String(Double(exchangeStringValue)!*Double(neuerPreis)!)
         
         if priceInEuro != nil {
             
