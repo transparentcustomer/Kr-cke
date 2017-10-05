@@ -12,18 +12,19 @@ let yahooSymbolPLIST = Bundle.main.path(forResource: "symbolData", ofType: "plis
 
 struct stockBrain
 {
- 
+    //MARK: - Pointers:
     var stockPuller = yahooPuller()
     var structure = stockStruct()
-    
+    //MARK: - variables:
     var win: Double = 0
-    var pricepaid   = ""
+    //    var pricepaid   = ""
+    var pricepaid: String?
     var numberToBuy: String?
     var yahooSymbolArray : [String] = []
     var insertedYahooSymbol: String?
     
     var yahooStockDataArray =   [[String:String]]()
-//    var yahooStockArray = [[String:String]]()
+    //    var yahooStockArray = [[String:String]]()
     
     private var yahooSymbol:    String?
     var moneySpendForStock:Double = 0
@@ -78,8 +79,9 @@ struct stockBrain
         
         if !(insertedYahooSymbol?.isEmpty)! //MARK: 🍩  serperate insertion
         {
+            //FIXME: 💩 breaks with unknown symbols
+            yahooStockDataArray = (fillYahooDataArray(insertedYahooSymbol!, stockNumber: numberToBuy ?? "0", pricepaid: pricepaid ?? "0"))
             
-            yahooStockDataArray = (fillYahooDataArray(insertedYahooSymbol!, stockNumber: numberToBuy!, pricepaid: pricepaid))
             print("🔮\(yahooStockDataArray)")
         }
         return yahooStockDataArray
@@ -90,23 +92,19 @@ struct stockBrain
     //MARK: - get Yahoo Info:
     
     var automateUpdateTurnedOn = false
-
+    
     mutating func getUpdates() -> ([[String : String]])
     { //.. to get stock names and price values
-        
-        
-        
-        
-
+      
         for (index,var item) in yahooStockDataArray.enumerated()
         {
-
+            
             //FIXME: 🔥 .. beware of cycling //.. in the case of no stock belonging to a symbol
             let symbol          = item["code"]!
             var stockName       :String?
             var stockLastPrice  :String?
             var lastpriceResult :String?
-         
+            
             //MARK: 🔫 get the name
             if item["name"] == "no info"
             {
@@ -114,46 +112,74 @@ struct stockBrain
                 stockName       =  stockPuller.getStockNameFromYahoo(yahoosymbol: symbol)
                 stockLastPrice  =  stockPuller.getLastPrice(yahoosymbol: symbol)
                 
-//                stockLastPrice  != nil ? stockPuller.getExchangeRates(priceInDollar: (stockPuller.getLastPrice(yahoosymbol: symbol))) : "no info"
-//                stockLastPrice  = stockPuller.getExchangeRates(priceInDollar: (stockPuller.getLastPrice(yahoosymbol: symbol)))
-//                stockLastPrice = String(structure.round2(valueToRoundOnTwoDecimals: Double(stockLastPrice!)!))
+                //                stockLastPrice  != nil ? stockPuller.getExchangeRates(priceInDollar: (stockPuller.getLastPrice(yahoosymbol: symbol))) : "no info"
+                //                stockLastPrice  = stockPuller.getExchangeRates(priceInDollar: (stockPuller.getLastPrice(yahoosymbol: symbol)))
+                //                stockLastPrice = String(structure.round2(valueToRoundOnTwoDecimals: Double(stockLastPrice!)!))
                 
                 yahooStockDataArray[index].updateValue(stockName!,      forKey: "name")
                 yahooStockDataArray[index].updateValue(stockLastPrice!, forKey: "lastprice")
                 
                 lastpriceResult = (yahooStockDataArray[index])["lastprice"]
-
+                
                 
             }
             
             if item["pricepaid"] == "no info" && (lastpriceResult != "N/A")
             {
-               
+                
                 //FIXME: 🦄 needs to be fixed first
+                print("🤡")
+                var pricepaidResult: String?
                 
-                var pricepaidResult = stockPuller.getPriceToPay(yahoosymbol: symbol)
-                pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult)!))
-                 print("pricepaid == no info 🦄 \(pricepaidResult)")
+                pricepaidResult  = stockPuller.getPriceToPay(yahoosymbol: symbol)
                 
-                win = (Double(lastpriceResult!)!-Double(pricepaidResult)!)
-                win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
+                (pricepaidResult == "") ? (pricepaidResult = "0") :(pricepaidResult = pricepaidResult)
                 
-                let winInPercent = String(structure.round2(valueToRoundOnTwoDecimals: (100*win/Double(pricepaidResult)!)))
+                if !(pricepaidResult?.isEmpty)! {
+                    
+                    pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult!)!))
+                    print("pricepaid == no info 🦄 \(pricepaidResult)")
+                    
+                    win = (Double(lastpriceResult!)!-Double(pricepaidResult!)!)
+                    win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
+                    
+                    let winInPercent = String(structure.round2(valueToRoundOnTwoDecimals: (100*win/Double(pricepaidResult!)!)))
+                    
+                    yahooStockDataArray[index].updateValue("\(String(win)) (\(winInPercent)%)", forKey: "change")
+                    
+                    
+                    yahooStockDataArray[index].updateValue(pricepaidResult!, forKey: "pricepaid")
+                    structure.newTextColor = structure.changeChangeColor(String(win))
+                }
                 
-                yahooStockDataArray[index].updateValue("\(String(win)) (\(winInPercent)%)", forKey: "change")
-                
-                
-                yahooStockDataArray[index].updateValue(pricepaidResult, forKey: "pricepaid")
-                structure.newTextColor = structure.changeChangeColor(String(win))
+                //                pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult)!))
+                //                 print("pricepaid == no info 🦄 \(pricepaidResult)")
+                //
+                //                win = (Double(lastpriceResult!)!-Double(pricepaidResult)!)
+                //                win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
+                //
+                //                let winInPercent = String(structure.round2(valueToRoundOnTwoDecimals: (100*win/Double(pricepaidResult)!)))
+                //
+                //                yahooStockDataArray[index].updateValue("\(String(win)) (\(winInPercent)%)", forKey: "change")
+                //
+                //
+                //                yahooStockDataArray[index].updateValue(pricepaidResult, forKey: "pricepaid")
+                //                structure.newTextColor = structure.changeChangeColor(String(win))
                 
             }else{
                 print("pricepaid == no info-else")
-                
+                print("🤡🤡")
                 
                 var pricepaidResult = (yahooStockDataArray[index])["pricepaid"]
                 
+                print("🤡🤡 price paid is nil is \(String(describing: pricepaidResult?.isEmpty))")
+                
+                
+                
+                
+                
                 pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult!)!))
-
+                
                 win = (Double(lastpriceResult!)!-Double(pricepaidResult!)!)
                 win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
                 
@@ -164,6 +190,7 @@ struct stockBrain
                 
                 
                 structure.newTextColor = structure.changeChangeColor(String(win))
+                
             }
             
             
@@ -233,68 +260,68 @@ struct stockBrain
     //MARK: - structureFunctions
     //MARK: - implementation calculator funcrions
     
-//    private enum Operation{
-//        
-//        case stringValue(String)
-////        case constant (Double)
-////        case unaryOperation((Double) -> Double)
-////        case binaryOperation((Double, Double) -> Double)
-////        case equals
-////        case reset
-//        
-//    }
-//    
-//    private var operations: Dictionary<String,Operation> = [
-//        
-//        "code"      : stockCode,
-//        "name"      : "no info",
-//        "lastprice" : "no info",
-//        
-//        "pricepaid" : pricepaid,
-//        "number"    : stockNumber,
-//        "win"       : "0",
-//        "change"    : "no info"
-//        
-//        
-//        
-////        "π": Operation.constant(Double.pi),
-////        "e": Operation.constant(M_E),
-////        "√": Operation.unaryOperation(sqrt),
-////        "cos": Operation.unaryOperation(cos),
-////        "±": Operation.unaryOperation({-$0}),
-////        
-////        "×": Operation.binaryOperation({$0*$1}),
-////        "÷": Operation.binaryOperation({$0/$1}),
-////        "+": Operation.binaryOperation({$0+$1}),
-////        "−": Operation.binaryOperation({$0-$1}),
-////        "x²": Operation.unaryOperation({$0*$0}),
-////        "=": Operation.equals
-//    ]
-//    
-//    mutating func performOperation(_ symbol: String)
-//    {
-//        if let operation = operations[symbol]{
-//            switch operation {
-//            case .constant(let value):
-//                accumulator = value
-//            case .unaryOperation(let function):
-//                if accumulator != nil {
-//                    accumulator =  function(accumulator!)
-//                }
-//            case .binaryOperation(let function):
-//                if accumulator != nil{
-//                    pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!)
-//                    accumulator = nil
-//                }
-//                
-//            case .equals:
-//                performPendingBinaryOperation()
-//            default:
-//                
-//                break
-//            }
-//            
-       }
+    //    private enum Operation{
+    //
+    //        case stringValue(String)
+    ////        case constant (Double)
+    ////        case unaryOperation((Double) -> Double)
+    ////        case binaryOperation((Double, Double) -> Double)
+    ////        case equals
+    ////        case reset
+    //
+    //    }
+    //
+    //    private var operations: Dictionary<String,Operation> = [
+    //
+    //        "code"      : stockCode,
+    //        "name"      : "no info",
+    //        "lastprice" : "no info",
+    //
+    //        "pricepaid" : pricepaid,
+    //        "number"    : stockNumber,
+    //        "win"       : "0",
+    //        "change"    : "no info"
+    //
+    //
+    //
+    ////        "π": Operation.constant(Double.pi),
+    ////        "e": Operation.constant(M_E),
+    ////        "√": Operation.unaryOperation(sqrt),
+    ////        "cos": Operation.unaryOperation(cos),
+    ////        "±": Operation.unaryOperation({-$0}),
+    ////
+    ////        "×": Operation.binaryOperation({$0*$1}),
+    ////        "÷": Operation.binaryOperation({$0/$1}),
+    ////        "+": Operation.binaryOperation({$0+$1}),
+    ////        "−": Operation.binaryOperation({$0-$1}),
+    ////        "x²": Operation.unaryOperation({$0*$0}),
+    ////        "=": Operation.equals
+    //    ]
+    //
+    //    mutating func performOperation(_ symbol: String)
+    //    {
+    //        if let operation = operations[symbol]{
+    //            switch operation {
+    //            case .constant(let value):
+    //                accumulator = value
+    //            case .unaryOperation(let function):
+    //                if accumulator != nil {
+    //                    accumulator =  function(accumulator!)
+    //                }
+    //            case .binaryOperation(let function):
+    //                if accumulator != nil{
+    //                    pendingBinaryOperation = PendingBinaryOperation(function: function, firstOperand: accumulator!)
+    //                    accumulator = nil
+    //                }
+    //
+    //            case .equals:
+    //                performPendingBinaryOperation()
+    //            default:
+    //
+    //                break
+    //            }
+    //
+}
 //    
 //    }
 //    

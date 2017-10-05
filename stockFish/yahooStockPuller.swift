@@ -125,10 +125,10 @@ struct yahooPuller{
         
         var priceInEuro: String?
         
-//        priceInEuro != nil ? (String(Double(exchangeStringValue)!*Double(neuerPreis)!)) : "no value available"
+        priceInEuro != nil ? (String(Double(exchangeStringValue)!*Double(neuerPreis)!)) : "no value available"
         
         
-        (String(Double(exchangeStringValue)!*Double(neuerPreis)!)) != nil ? priceInEuro : "no value available"
+//        (String(Double(exchangeStringValue)!*Double(neuerPreis)!)) != nil ? priceInEuro : "no value available"
         
 //        priceInEuro = String(Double(exchangeStringValue)!*Double(neuerPreis)!)
         

@@ -20,13 +20,10 @@ class stockFishController: NSViewController {
     //MARK: - Pointers:
     var brain = stockBrain()
     var structure = stockStruct()
+    
     //MARK: - variables:
+    //FIXME: delete ⚰️
     
-//    var insertedYahooSymbol: String?
-    var insertedYahooSymbolNumber = "no Number given"
-    
-    
-    //    var pricepaid: String?
     
     var yahooDataArray = [[String:String]](){
         didSet{
@@ -47,9 +44,11 @@ class stockFishController: NSViewController {
         brain.automateUpdateTurnedOn ?
             print("automatic update is on") :
             print("automatic update is off")
+        
     }
     
-    @IBAction func update(_ sender: NSButton) {executeUpdate()}
+    @IBAction func update(_ sender: NSButton) {
+        executeUpdate()}
     
     //.. func to automate the update with time interval
     @IBAction func updateOnOff(_ sender: NSButton)
@@ -57,136 +56,21 @@ class stockFishController: NSViewController {
         let buttonTurnedOn = sender.state == NSControl.StateValue.on
         buttonTurnedOn ? (brain.automateUpdateTurnedOn = true) : (brain.automateUpdateTurnedOn = false)
     }
-    
-    /*fileprivate func useYahooSymbol() {
-        //FIXME: CLEANUP the MESS
 
-//
-//        (pricePaid.stringValue != brain.pricepaid) ? (brain.pricepaid = pricePaid.stringValue):(brain.pricepaid = "no info")
-//        (numberOffStocks.stringValue != brain.numberToBuy) ? (brain.numberToBuy = numberOffStocks.stringValue):(brain.numberToBuy = "no info")
-     
-//        var symbolArray = brain.extractStockSymbolsFromCSV()
-//
-//        let restrictedSymbolArray = symbolArray[27300...symbolArray.count-1].reversed()
-        //.. tot 27607
-        
-        //FIXME: DispatchQueue - corretly placed and efficient???
-        
-        //MARK: 🍩 automatic insertion
-//        if !(brain.insertedYahooSymbol?.isEmpty)! //MARK: 🍩  serperate insertion
-//        {
-//            if numberOffStocks.stringValue != ""{insertedYahooSymbolNumber = numberOffStocks.stringValue
-//            }else{ insertedYahooSymbolNumber   = "no number"}
-//
-//            yahooDataArray = (brain.fillYahooDataArray(brain.insertedYahooSymbol!, stockNumber: insertedYahooSymbolNumber, pricepaid: brain.pricepaid))
-//            print("🔮\(yahooDataArray)")
-//        }
-//        else if  brain.insertedYahooSymbol == "test"
-//        {
-//            yahooSymbol.stringValue.removeAll()
-//
-//
-//            let symbolArray = restrictedSymbolArray
-//
-//
-//            for symbol in symbolArray
-//            {
-//
-//                yahooDataArray = brain.fillYahooDataArray(symbol, stockNumber: insertedYahooSymbolNumber, pricepaid: brain.pricepaid)
-//            }
-//
-//            var symbolArrayString = ""
-//
-//            for symbol in symbolArray
-//            {
-//                print("symbol: \(symbol)")
-//
-//                if symbolArrayString == "" {
-//                    symbolArrayString = symbolArrayString+symbol
-//                }else{
-//                    symbolArrayString = symbolArrayString+","+symbol
-//                }
-//            }
-//
-//
-//            print("symbolArrayString: \(String(describing: symbolArrayString))")
-//
-//            let multiLastPriceURLstring = "http://download.finance.yahoo.com/d/quotes.csv?s=\(symbolArrayString)&f=n,l1"
-//            print("multiLastPriceURLstring: \(multiLastPriceURLstring)")
-//            //"http://download.finance.yahoo.com/d/quotes.csv?s=AAPL,ABC,MMM&f=n,l1"
-//
-//            var dataFromURL: String?
-//
-//            let yahooURL = URL(string: multiLastPriceURLstring)
-//
-//            if let stringForValue = try? String(contentsOf: yahooURL!, encoding: String.Encoding.utf8)
-//
-//            {dataFromURL = stringForValue as String}
-//
-//            var dataFromURLasArray = dataFromURL?.components(separatedBy: "\n")
-//
-//            //MARK: process the data
-//
-//
-//            //dataFromURLasArray?.remove(at: (dataFromURLasArray?.count)!-1)
-//
-//
-//            //seperateStockInfo
-//
-//            dataFromURLasArray = dataFromURLasArray?.reversed()
-//
-//            for (index, seperatecomponents) in dataFromURLasArray!.enumerated(){
-//
-//                let indexArray = index
-//                //let indexArray = ((dataFromURLasArray?.count)!-index)
-//                let (seperateComponents) = seperatecomponents.components(separatedBy: ",N/A,")
-//
-//                var theName         = seperateComponents[0]
-//                let theLastPrice    = seperateComponents[1]
-//
-//
-//
-//                theName = theName.replacingOccurrences(of: "\"", with: "", options: .regularExpression)
-//
-//
-//                yahooDataArray[indexArray].updateValue(theName, forKey: "name")
-//                yahooDataArray[indexArray].updateValue(theLastPrice, forKey: "lastprice")
-//
-//                print("restrictedSymbolArray: \(restrictedSymbolArray)")
-//
-//            }
-//
-//            print("number of symbols: \(restrictedSymbolArray.count+1)")
-//            print("number of names: \(restrictedSymbolArray.count)")
-//            print("number of prices: \(restrictedSymbolArray.count)")
-//
-//        }else if self.yahooSymbol.stringValue.isEmpty
-//        {
-//            DispatchQueue.main.async
-//                { [unowned self] in
-//
-//                    for symbol  in  restrictedSymbolArray
-//                    {
-//                        self.brain.insertedYahooSymbol = symbol
-//                        self.yahooDataArray = (self.brain.fillYahooDataArray(self.brain.insertedYahooSymbol!, stockNumber: self.insertedYahooSymbolNumber, pricepaid: self.brain.pricepaid))
-//                    }
-//            }
-//
-//        }
-    }*/
-    
     @IBAction func addStock(_ sender: NSButton)
     {
+        //FIXME: 💩 breaks with unknown symbols
+        //
         brain.insertedYahooSymbol = yahooSymbol.stringValue
         
         (pricePaid.stringValue != brain.pricepaid) ? (brain.pricepaid = pricePaid.stringValue):(brain.pricepaid = "no info")
-        
-        
+
         (numberOffStocks.stringValue != brain.numberToBuy) ? (brain.numberToBuy = numberOffStocks.stringValue):(brain.numberToBuy = "no info")
         
+        print("numberOffStocks.stringValue.isEmpty😡 \(numberOffStocks.stringValue.isEmpty)")
+        print("numberOffStocks.stringValue.isEmpty😡 \(numberOffStocks.stringValue)")
         
-        
-        brain.addStockSeperateInsertion()
+       yahooDataArray = brain.addStockSeperateInsertion()
 //       useYahooSymbol()
        
     }
@@ -297,7 +181,123 @@ extension stockFishController:NSTableViewDataSource, NSTableViewDelegate
     
 }
 
-//FIXIT: - Recycle Code🛢:
+//FIXME: - Recycle Code 🛢:
+//MARK: addSymbol function that is now in the model
 
-
+/*fileprivate func useYahooSymbol() {
+ //FIXME: CLEANUP the MESS
+ 
+ //
+ //        (pricePaid.stringValue != brain.pricepaid) ? (brain.pricepaid = pricePaid.stringValue):(brain.pricepaid = "no info")
+ //        (numberOffStocks.stringValue != brain.numberToBuy) ? (brain.numberToBuy = numberOffStocks.stringValue):(brain.numberToBuy = "no info")
+ 
+ //        var symbolArray = brain.extractStockSymbolsFromCSV()
+ //
+ //        let restrictedSymbolArray = symbolArray[27300...symbolArray.count-1].reversed()
+ //.. tot 27607
+ 
+ //FIXME: DispatchQueue - corretly placed and efficient???
+ 
+ //MARK: 🍩 automatic insertion
+ //        if !(brain.insertedYahooSymbol?.isEmpty)! //MARK: 🍩  serperate insertion
+ //        {
+ //            if numberOffStocks.stringValue != ""{insertedYahooSymbolNumber = numberOffStocks.stringValue
+ //            }else{ insertedYahooSymbolNumber   = "no number"}
+ //
+ //            yahooDataArray = (brain.fillYahooDataArray(brain.insertedYahooSymbol!, stockNumber: insertedYahooSymbolNumber, pricepaid: brain.pricepaid))
+ //            print("🔮\(yahooDataArray)")
+ //        }
+ //        else if  brain.insertedYahooSymbol == "test"
+ //        {
+ //            yahooSymbol.stringValue.removeAll()
+ //
+ //
+ //            let symbolArray = restrictedSymbolArray
+ //
+ //
+ //            for symbol in symbolArray
+ //            {
+ //
+ //                yahooDataArray = brain.fillYahooDataArray(symbol, stockNumber: insertedYahooSymbolNumber, pricepaid: brain.pricepaid)
+ //            }
+ //
+ //            var symbolArrayString = ""
+ //
+ //            for symbol in symbolArray
+ //            {
+ //                print("symbol: \(symbol)")
+ //
+ //                if symbolArrayString == "" {
+ //                    symbolArrayString = symbolArrayString+symbol
+ //                }else{
+ //                    symbolArrayString = symbolArrayString+","+symbol
+ //                }
+ //            }
+ //
+ //
+ //            print("symbolArrayString: \(String(describing: symbolArrayString))")
+ //
+ //            let multiLastPriceURLstring = "http://download.finance.yahoo.com/d/quotes.csv?s=\(symbolArrayString)&f=n,l1"
+ //            print("multiLastPriceURLstring: \(multiLastPriceURLstring)")
+ //            //"http://download.finance.yahoo.com/d/quotes.csv?s=AAPL,ABC,MMM&f=n,l1"
+ //
+ //            var dataFromURL: String?
+ //
+ //            let yahooURL = URL(string: multiLastPriceURLstring)
+ //
+ //            if let stringForValue = try? String(contentsOf: yahooURL!, encoding: String.Encoding.utf8)
+ //
+ //            {dataFromURL = stringForValue as String}
+ //
+ //            var dataFromURLasArray = dataFromURL?.components(separatedBy: "\n")
+ //
+ //            //MARK: process the data
+ //
+ //
+ //            //dataFromURLasArray?.remove(at: (dataFromURLasArray?.count)!-1)
+ //
+ //
+ //            //seperateStockInfo
+ //
+ //            dataFromURLasArray = dataFromURLasArray?.reversed()
+ //
+ //            for (index, seperatecomponents) in dataFromURLasArray!.enumerated(){
+ //
+ //                let indexArray = index
+ //                //let indexArray = ((dataFromURLasArray?.count)!-index)
+ //                let (seperateComponents) = seperatecomponents.components(separatedBy: ",N/A,")
+ //
+ //                var theName         = seperateComponents[0]
+ //                let theLastPrice    = seperateComponents[1]
+ //
+ //
+ //
+ //                theName = theName.replacingOccurrences(of: "\"", with: "", options: .regularExpression)
+ //
+ //
+ //                yahooDataArray[indexArray].updateValue(theName, forKey: "name")
+ //                yahooDataArray[indexArray].updateValue(theLastPrice, forKey: "lastprice")
+ //
+ //                print("restrictedSymbolArray: \(restrictedSymbolArray)")
+ //
+ //            }
+ //
+ //            print("number of symbols: \(restrictedSymbolArray.count+1)")
+ //            print("number of names: \(restrictedSymbolArray.count)")
+ //            print("number of prices: \(restrictedSymbolArray.count)")
+ //
+ //        }else if self.yahooSymbol.stringValue.isEmpty
+ //        {
+ //            DispatchQueue.main.async
+ //                { [unowned self] in
+ //
+ //                    for symbol  in  restrictedSymbolArray
+ //                    {
+ //                        self.brain.insertedYahooSymbol = symbol
+ //                        self.yahooDataArray = (self.brain.fillYahooDataArray(self.brain.insertedYahooSymbol!, stockNumber: self.insertedYahooSymbolNumber, pricepaid: self.brain.pricepaid))
+ //                    }
+ //            }
+ //
+ //        }
+ }*/
 
