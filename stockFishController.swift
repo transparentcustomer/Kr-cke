@@ -32,7 +32,22 @@ class stockFishController: NSViewController {
     }
     
     //MARK: - Actions
-    fileprivate func executeUpdate() {
+    
+    
+    @IBAction func addStock(_ sender: NSButton)
+    {
+        //FIXME: 💩 breaks with unknown symbols
+        brain.insertedYahooSymbol = yahooSymbol.stringValue
+        
+        (!pricePaid.stringValue.isEmpty) ? (brain.pricepaid = pricePaid.stringValue):(brain.pricepaid = "no info")
+        
+        (!numberOffStocks.stringValue.isEmpty) ? (brain.numberToBuy = numberOffStocks.stringValue):(brain.numberToBuy = "no info")
+        
+        yahooDataArray = brain.addStockSeperateInsertion()
+        
+    }
+    
+    @IBAction func update(_ sender: NSButton) {
         
         progress.isHidden = false
         progress.startAnimation(nil)
@@ -45,11 +60,8 @@ class stockFishController: NSViewController {
             print("automatic update is on") :
             print("automatic update is off")
         
-    }
-    
-    @IBAction func update(_ sender: NSButton) {
-        executeUpdate()}
-    
+        }
+ 
     //.. func to automate the update with time interval
     @IBAction func updateOnOff(_ sender: NSButton)
     {
@@ -57,24 +69,6 @@ class stockFishController: NSViewController {
         buttonTurnedOn ? (brain.automateUpdateTurnedOn = true) : (brain.automateUpdateTurnedOn = false)
     }
 
-    @IBAction func addStock(_ sender: NSButton)
-    {
-        //FIXME: 💩 breaks with unknown symbols
-        //
-        brain.insertedYahooSymbol = yahooSymbol.stringValue
-        
-        (pricePaid.stringValue != brain.pricepaid) ? (brain.pricepaid = pricePaid.stringValue):(brain.pricepaid = "no info")
-
-        (numberOffStocks.stringValue != brain.numberToBuy) ? (brain.numberToBuy = numberOffStocks.stringValue):(brain.numberToBuy = "no info")
-        
-        print("numberOffStocks.stringValue.isEmpty😡 \(numberOffStocks.stringValue.isEmpty)")
-        print("numberOffStocks.stringValue.isEmpty😡 \(numberOffStocks.stringValue)")
-        
-       yahooDataArray = brain.addStockSeperateInsertion()
-//       useYahooSymbol()
-       
-    }
-    
     @IBAction func clearTable(_ sender: NSButton) {
         
         yahooDataArray.removeAll()
@@ -134,7 +128,6 @@ extension stockFishController:NSTableViewDataSource, NSTableViewDelegate
     
     func tableView(_ stockTableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView?{
         
-        print("😭😭😭")
         var cellInStockTableView:NSTableCellView
         
         cellInStockTableView  = stockTableView.makeView(withIdentifier: (tableColumn?.identifier)!, owner: self) as! NSTableCellView
@@ -173,8 +166,7 @@ extension stockFishController:NSTableViewDataSource, NSTableViewDelegate
             
         }
         
-        print("tableView function")
-        
+       
         
         return cellInStockTableView
     }

@@ -15,39 +15,42 @@ struct stockBrain
     //MARK: - Pointers:
     var stockPuller = yahooPuller()
     var structure = stockStruct()
+    
     //MARK: - variables:
-    var win: Double = 0
-    //    var pricepaid   = ""
-    var pricepaid: String?
-    var numberToBuy: String?
-    var yahooSymbolArray : [String] = []
-    var insertedYahooSymbol: String?
-    
-    var yahooStockDataArray =   [[String:String]]()
-    //    var yahooStockArray = [[String:String]]()
-    
+    //MARK: 🤔 whatelse can be made private?
     private var yahooSymbol:    String?
+    var win: Double = 0
+    var pricepaid           : String?
+    var numberToBuy         : String?
+    var insertedYahooSymbol : String?
+    var yahooSymbolArray    : [String]?
+    //FIXME: delete ⚰️
+    //    var yahooSymbolArray    : [String] = []
+    var yahooStockDataArray =   [[String:String]]()
+    
+    
     var moneySpendForStock:Double = 0
     
     
     
     //MARK: - filling of model with symbols
-    mutating func fillYahooDataArray(_ yahoosymbol: String, stockNumber: String,pricepaid: String ) -> [[String:String]]
+    mutating func fillYahooDataArray(_ yahoosymbol: String, stockNumber: String?,pricepaid: String? ) -> [[String:String]]
     {
         
         yahooStockDataArray.insert(
             [
+                
                 "code"      : yahoosymbol,
                 "name"      : "no info",
                 "lastprice" : "no info",
                 
-                "pricepaid" : pricepaid,
-                "number"    : stockNumber,
+                "pricepaid" : (pricepaid    != "no info") ? pricepaid!  :  "0" ,
+                "number"    : (stockNumber  != "no info") ? stockNumber!:  "0" ,
                 "win"       : "0",
                 "change"    : "no info"
                 
             ], at: 0)
-        
+        print("🔮🔮\(yahooStockDataArray)")
         return yahooStockDataArray
     }
     
@@ -64,12 +67,12 @@ struct stockBrain
                 yahooSymbolArray = data.components(separatedBy: "\r") //.. removal of return commands from String
             }
             
-        } catch let err as NSError {
+        } catch let fehler as NSError {
             // do something with Error
-            print(err)
+            print(fehler)
             print("there is an error in processing the CSV file")
         }
-        return yahooSymbolArray
+        return yahooSymbolArray!
     }
     
     //MARK: - add stock to tableView
@@ -80,7 +83,7 @@ struct stockBrain
         if !(insertedYahooSymbol?.isEmpty)! //MARK: 🍩  serperate insertion
         {
             //FIXME: 💩 breaks with unknown symbols
-            yahooStockDataArray = (fillYahooDataArray(insertedYahooSymbol!, stockNumber: numberToBuy ?? "0", pricepaid: pricepaid ?? "0"))
+            yahooStockDataArray = (fillYahooDataArray(insertedYahooSymbol!, stockNumber: numberToBuy, pricepaid: pricepaid ))
             
             print("🔮\(yahooStockDataArray)")
         }
@@ -95,7 +98,7 @@ struct stockBrain
     
     mutating func getUpdates() -> ([[String : String]])
     { //.. to get stock names and price values
-      
+        
         for (index,var item) in yahooStockDataArray.enumerated()
         {
             
@@ -199,6 +202,8 @@ struct stockBrain
         }
         return yahooStockDataArray
     }
+    
+    
     mutating func searchCSVforBrokenSymbols()
     {
         print("test searchCSVforBrokenSymbols")
@@ -209,14 +214,10 @@ struct stockBrain
         
         for (index,var item) in yahooStockDataArray.enumerated()
         {
-            
-            
+      
             let symbol          = item["code"]!
             var stockName       :String?
-            
-            
-            
-            
+
             //MARK: get the name
             if item["name"] == "no info"
             {
