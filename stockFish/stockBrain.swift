@@ -94,111 +94,59 @@ struct stockBrain
         
         let stocksymbol = ((yahooStockDataArray[Index])["code"]!)
         
-        print("🤢\(stocksymbol)")
-        switch stockinfo
-        {
+        switch stockinfo{
+            
         case "name":
-
+            
             if (((yahooStockDataArray[Index])[stockinfo]!) == "no info")
             {
                 let stockname = stockPuller.getStockNameFromYahoo(yahoosymbol: stocksymbol)
-                yahooStockDataArray[Index].updateValue(stockname,      forKey: "name")
+                yahooStockDataArray[Index].updateValue(stockname,      forKey: stockinfo)
             }
             
         case "lastprice":
-
+            
             if (((yahooStockDataArray[Index])[stockinfo]!) == "no info")
             {
                 let stockLastPrice = stockPuller.getLastPrice(yahoosymbol: stocksymbol)
-                yahooStockDataArray[Index].updateValue(stockLastPrice,      forKey: "lastprice")
+                yahooStockDataArray[Index].updateValue(stockLastPrice,      forKey: stockinfo)
             }
             
         case "pricepaid":
-
+            
             
             if !((yahooStockDataArray[Index])[stockinfo]!).isEmpty
             {
-
-                var pricepaidResult  = stockPuller.getPriceToPay(yahoosymbol: stocksymbol)
                 
-//                if !(pricepaidResult?.isEmpty)! {
-                
-                pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult)!))
-              
-//                    win = (Double(lastpriceResult!)!-Double(pricepaidResult!)!)
-//                    win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
-//
-//                    let winInPercent = String(structure.round2(valueToRoundOnTwoDecimals: (100*win/Double(pricepaidResult!)!)))
-//
-//                    yahooStockDataArray[index].updateValue("\(String(win)) (\(winInPercent)%)", forKey: "change")
-                
+                if !(pricepaid?.isEmpty)!
+                {
+                    yahooStockDataArray[Index].updateValue(pricepaid!, forKey: stockinfo)
                     
-                yahooStockDataArray[Index].updateValue(pricepaidResult, forKey: stockinfo)
-//                    structure.newTextColor = structure.changeChangeColor(String(win))
+                }else{
+                    var pricepaidResult  = stockPuller.getPriceToPay(yahoosymbol: stocksymbol)
+                    pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult)!))
+                    yahooStockDataArray[Index].updateValue(pricepaidResult, forKey: stockinfo)
+                }
                 
-//                🤡🤡🤡🤡🤡🤡🤡🤡🤡🤡🤡🤡🤡🤡
-//                }
+            }else{
                 
-                //                pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult)!))
-                //                 print("pricepaid == no info 🦄 \(pricepaidResult)")
-                //
-                //                win = (Double(lastpriceResult!)!-Double(pricepaidResult)!)
-                //                win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
-                //
-                //                let winInPercent = String(structure.round2(valueToRoundOnTwoDecimals: (100*win/Double(pricepaidResult)!)))
-                //
-                //                yahooStockDataArray[index].updateValue("\(String(win)) (\(winInPercent)%)", forKey: "change")
-                //
-                //
-                //                yahooStockDataArray[index].updateValue(pricepaidResult, forKey: "pricepaid")
-                //                structure.newTextColor = structure.changeChangeColor(String(win))
+                print("👁👁👁👁👁👁")
                 
             }
-//            else{
-//                print("pricepaid == no info-else")
-//                print("🤡🤡")
-//
-//                var pricepaidResult = (yahooStockDataArray[index])["pricepaid"]
-//                print(pricepaidResult!)
-//                print("🤡🤡 price paid is nil is \(String(describing: pricepaidResult?.isEmpty))")
-//
-//
-//
-//
-//                print("1.")
-//                pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult!)!))
-//
-//                print("2.")
-//
-//                if lastpriceResult != "N/A"{
-//                    print("3.")
-//                    //                    win = (Double(lastpriceResult!)!-Double(pricepaidResult!)!)
-//                    //                    print("4.")
-//                    //                    win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
-//                    print("4.")
-//
-//
-//                    let winInPercent = String(structure.round2(valueToRoundOnTwoDecimals: (100*win/Double(pricepaidResult!)!)))
-//
-//
-//                    yahooStockDataArray[index].updateValue("\(String(win)) (\(winInPercent)%)", forKey: "change")
-//
-//
-//                }else{
-//                    yahooStockDataArray[index].updateValue("no data", forKey: "change")
-//                }
             
+            
+        case "change":
+            
+            if ((((yahooStockDataArray[Index])[stockinfo]!) == "no info") && (((yahooStockDataArray[Index])["lastprice"]!) != "N/A"))
+            {
                 
+                win = Double((yahooStockDataArray[Index])["lastprice"]!)!-Double((yahooStockDataArray[Index])["pricepaid"]!)!
                 
+                yahooStockDataArray[Index].updateValue(String(win),      forKey: stockinfo)
                 
-                
-//                structure.newTextColor = structure.changeChangeColor(String(win))
-            
-//            }
-            
-            
-            
-            
+            }else{
+                yahooStockDataArray[Index].updateValue("☠️",      forKey: stockinfo)
+            }
             
         default:
             print("default 👀 not used")
@@ -212,10 +160,6 @@ struct stockBrain
         for (index,var item) in yahooStockDataArray.enumerated()
         {
             
-//            var stockName       :String?
-//            var stockLastPrice  :String?
-            var lastpriceResult :String?
-//
             
             //FIXME: 🔥 .. beware of cycling //.. in the case of no stock belonging to a symbol
             let symbol          = item["code"]! // cant be empty
