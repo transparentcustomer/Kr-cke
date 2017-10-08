@@ -24,6 +24,8 @@ struct stockBrain
     var numberToBuy         : String?
     var insertedYahooSymbol : String?
     var yahooSymbolArray    : [String]?
+    
+    var automateUpdateTurnedOn = false
     //FIXME: delete ⚰️
     //    var yahooSymbolArray    : [String] = []
     var yahooStockDataArray =   [[String:String]]()
@@ -31,21 +33,30 @@ struct stockBrain
     
     var moneySpendForStock:Double = 0
     
-    
+    //MARK: - add stock to tableView 🍩  serperate insertion
+    mutating func addStockSingleInsertion()->[[String:String]]{
+        
+        if !((insertedYahooSymbol?.isEmpty)!)
+        {
+            //FIXME: 💩 breaks with unknown symbols
+            yahooStockDataArray = (fillArrayAfterPushingAddStock(insertedYahooSymbol!, stockNumber: numberToBuy!, pricepaid: pricepaid! ))
+            
+            print("🔮\(yahooStockDataArray)")
+        }
+        return yahooStockDataArray
+        
+    }
     
     //MARK: - filling of model with symbols
-    mutating func fillYahooDataArray(_ yahoosymbol: String, stockNumber: String?,pricepaid: String? ) -> [[String:String]]
+    mutating func fillArrayAfterPushingAddStock(_ yahoosymbol: String, stockNumber: String,pricepaid: String ) -> [[String:String]]
     {
-        
         yahooStockDataArray.insert(
             [
-                
                 "code"      : yahoosymbol,
                 "name"      : "no info",
                 "lastprice" : "no info",
-                
-                "pricepaid" : (pricepaid    != "no info") ? pricepaid!  :  "0" ,
-                "number"    : (stockNumber  != "no info") ? stockNumber!:  "0" ,
+                "pricepaid" : pricepaid.isEmpty     ?   "0": pricepaid,
+                "number"    : stockNumber.isEmpty   ?   "0": stockNumber,
                 "win"       : "0",
                 "change"    : "no info"
                 
@@ -53,6 +64,8 @@ struct stockBrain
         print("🔮🔮\(yahooStockDataArray)")
         return yahooStockDataArray
     }
+
+    //MARK: - get stock Smbols for CSV file
     
     mutating func extractStockSymbolsFromCSV()-> Array<String>
     {
@@ -75,43 +88,25 @@ struct stockBrain
         return yahooSymbolArray!
     }
     
-    //MARK: - add stock to tableView
-    
-    
-    mutating func addStockSeperateInsertion()->[[String:String]]{
-        
-        if !(insertedYahooSymbol?.isEmpty)! //MARK: 🍩  serperate insertion
-        {
-            //FIXME: 💩 breaks with unknown symbols
-            yahooStockDataArray = (fillYahooDataArray(insertedYahooSymbol!, stockNumber: numberToBuy, pricepaid: pricepaid ))
-            
-            print("🔮\(yahooStockDataArray)")
-        }
-        return yahooStockDataArray
-        
-    }
-    
-    
     //MARK: - get Yahoo Info:
-    
-    var automateUpdateTurnedOn = false
-    
+
     mutating func getUpdates() -> ([[String : String]])
     { //.. to get stock names and price values
         
         for (index,var item) in yahooStockDataArray.enumerated()
         {
-            
             //FIXME: 🔥 .. beware of cycling //.. in the case of no stock belonging to a symbol
-            let symbol          = item["code"]!
+            let symbol          = item["code"]! // cant be empty
             var stockName       :String?
             var stockLastPrice  :String?
             var lastpriceResult :String?
             
+            print("😍\(item)")
+            
             //MARK: 🔫 get the name
             if item["name"] == "no info"
             {
-                
+                print("name == no info")
                 stockName       =  stockPuller.getStockNameFromYahoo(yahoosymbol: symbol)
                 stockLastPrice  =  stockPuller.getLastPrice(yahoosymbol: symbol)
                 
@@ -141,7 +136,7 @@ struct stockBrain
                 if !(pricepaidResult?.isEmpty)! {
                     
                     pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult!)!))
-                    print("pricepaid == no info 🦄 \(pricepaidResult)")
+                    print("pricepaid == no info 🦄 \(String(describing: pricepaidResult))")
                     
                     win = (Double(lastpriceResult!)!-Double(pricepaidResult!)!)
                     win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
@@ -174,7 +169,7 @@ struct stockBrain
                 print("🤡🤡")
                 
                 var pricepaidResult = (yahooStockDataArray[index])["pricepaid"]
-                
+                print(pricepaidResult!)
                 print("🤡🤡 price paid is nil is \(String(describing: pricepaidResult?.isEmpty))")
                 
                 
@@ -183,13 +178,23 @@ struct stockBrain
                 
                 pricepaidResult = String(structure.round2(valueToRoundOnTwoDecimals: Double(pricepaidResult!)!))
                 
-                win = (Double(lastpriceResult!)!-Double(pricepaidResult!)!)
-                win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
+                if lastpriceResult != "N/A"{
+                    
+                    win = (Double(lastpriceResult!)!-Double(pricepaidResult!)!)
+                    win = Double(structure.round2(valueToRoundOnTwoDecimals: win))!
+                    
+                    let winInPercent = String(structure.round2(valueToRoundOnTwoDecimals: (100*win/Double(pricepaidResult!)!)))
+                    
+                    
+                    yahooStockDataArray[index].updateValue("\(String(win)) (\(winInPercent)%)", forKey: "change")
+                  
+                    
+                }else{
+                        yahooStockDataArray[index].updateValue("no data", forKey: "change")
+                }
                 
-                let winInPercent = String(structure.round2(valueToRoundOnTwoDecimals: (100*win/Double(pricepaidResult!)!)))
                 
                 
-                yahooStockDataArray[index].updateValue("\(String(win)) (\(winInPercent)%)", forKey: "change")
                 
                 
                 structure.newTextColor = structure.changeChangeColor(String(win))

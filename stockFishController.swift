@@ -37,13 +37,11 @@ class stockFishController: NSViewController {
     @IBAction func addStock(_ sender: NSButton)
     {
         //FIXME: 💩 breaks with unknown symbols
-        brain.insertedYahooSymbol = yahooSymbol.stringValue
-        
-        (!pricePaid.stringValue.isEmpty) ? (brain.pricepaid = pricePaid.stringValue):(brain.pricepaid = "no info")
-        
-        (!numberOffStocks.stringValue.isEmpty) ? (brain.numberToBuy = numberOffStocks.stringValue):(brain.numberToBuy = "no info")
-        
-        yahooDataArray = brain.addStockSeperateInsertion()
+        brain.insertedYahooSymbol   = yahooSymbol.stringValue
+        brain.pricepaid             = pricePaid.stringValue
+        brain.numberToBuy           = numberOffStocks.stringValue
+   
+        yahooDataArray = brain.addStockSingleInsertion()
         
     }
     
@@ -148,7 +146,7 @@ extension stockFishController:NSTableViewDataSource, NSTableViewDelegate
             //result.textField?.textColor = structure.newTextColor
             print("structure.newTextColor- change: \(structure.newTextColor)")
             
-            print("magic number: \(brain.win)")
+            print("magic number: \(String(describing: brain.win))")
             
             if Double(brain.win) < 0 {
                 cellInStockTableView.textField?.textColor = NSColor.red
