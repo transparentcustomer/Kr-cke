@@ -47,10 +47,12 @@ struct yahooPuller{
     }
     
     func getPriceToPay (yahoosymbol: String)-> String{
+        
         var pricetopay: String?
         
         let URLstring = completeYahooURL(yahoosymbol, "l1")//.. "l1" last price b is bid
         pricetopay = downloadDataWithURL(yahoourlstring: URLstring)
+        
         return pricetopay!
     }
     
